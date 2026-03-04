@@ -19,8 +19,24 @@ A daily, source-linked digest of frontier robotics research and market demand si
 
 ### Today
 
-- **CN**: {% if latest_cn %}[{{ latest_cn.title }}]({{ latest_cn.url | relative_url }}){% else %}(no post yet){% endif %}
-- **EN**: {% if latest_en %}[{{ latest_en.title }}]({{ latest_en.url | relative_url }}){% else %}(no post yet){% endif %}
+<div class="d-flex flex-wrap gap-2 my-3">
+  {% if latest_cn %}
+  <a class="btn btn-primary" href="{{ latest_cn.url | relative_url }}">CN — Today</a>
+  {% else %}
+  <span class="btn btn-primary disabled">CN — Today (no post)</span>
+  {% endif %}
+
+  {% if latest_en %}
+  <a class="btn btn-outline-primary" href="{{ latest_en.url | relative_url }}">EN — Today</a>
+  {% else %}
+  <span class="btn btn-outline-primary disabled">EN — Today (no post)</span>
+  {% endif %}
+</div>
+
+<p class="text-muted mb-4">
+  Latest CN: {% if latest_cn %}<a href="{{ latest_cn.url | relative_url }}">{{ latest_cn.title }}</a>{% else %}(none){% endif %}<br/>
+  Latest EN: {% if latest_en %}<a href="{{ latest_en.url | relative_url }}">{{ latest_en.title }}</a>{% else %}(none){% endif %}
+</p>
 
 ---
 
