@@ -10,18 +10,30 @@ order: 5
 
 A daily, source-linked digest of frontier robotics research and market demand signals.
 
-- **CN**: posts tagged `cn`
-- **EN**: posts tagged `en`
+{% assign digest_posts = site.posts | where_exp: "p", "p.categories contains 'Digest'" %}
+{% assign cn_posts = digest_posts | where_exp: "p", "p.tags contains 'cn'" %}
+{% assign en_posts = digest_posts | where_exp: "p", "p.tags contains 'en'" %}
 
-### Latest
+{% assign latest_cn = cn_posts | first %}
+{% assign latest_en = en_posts | first %}
 
-{% assign digests = site.posts | where_exp: "p", "p.categories contains 'Digest'" %}
+### Today
 
-{% for post in digests limit: 30 %}
+- **CN**: {% if latest_cn %}[{{ latest_cn.title }}]({{ latest_cn.url | relative_url }}){% else %}(no post yet){% endif %}
+- **EN**: {% if latest_en %}[{{ latest_en.title }}]({{ latest_en.url | relative_url }}){% else %}(no post yet){% endif %}
+
+---
+
+### Latest (CN)
+
+{% for post in cn_posts limit: 14 %}
 - {{ post.date | date: "%Y-%m-%d" }} — [{{ post.title }}]({{ post.url | relative_url }})
-  {% if post.tags %}
-  - Tags: {% for t in post.tags %}`{{ t }}`{% unless forloop.last %} {% endunless %}{% endfor %}
-  {% endif %}
+{% endfor %}
+
+### Latest (EN)
+
+{% for post in en_posts limit: 14 %}
+- {{ post.date | date: "%Y-%m-%d" }} — [{{ post.title }}]({{ post.url | relative_url }})
 {% endfor %}
 
 > Tip: Use the built-in **Tags** page to filter `cn` / `en`.
