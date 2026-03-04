@@ -1,12 +1,14 @@
 ---
 layout: page
 # The tab name on the sidebar.
-title: Digests
+title: Daily Robotics News
 icon: fas fa-robot
 order: 5
 ---
 
-## Daily Robotics Digests
+## Daily Robotics News
+
+A daily, source-linked digest of frontier robotics research and market demand signals.
 
 - **CN**: posts tagged `cn`
 - **EN**: posts tagged `en`
