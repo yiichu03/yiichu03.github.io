@@ -29,6 +29,18 @@ latest version of the **Chirpy** theme and the [CD][CD] workflow to here, so tha
 
 Check out the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy/wiki).
 
+## Literature Notes
+
+This site includes a `Literature Notes` tab backed by notes in the sibling Obsidian vault folder `../10 Literature Notes`.
+
+To sync local notes into the site repository, run:
+
+```shell
+python3 tools/sync_literature_notes.py
+```
+
+The script generates publishable pages in `_literature_notes/` and copies linked assets into `assets/literature/`.
+
 ## Contributing
 
 This repository is automatically updated with new releases from the theme repository. If you encounter any issues or want to contribute to its improvement, please visit the [theme repository][chirpy] to provide feedback.
