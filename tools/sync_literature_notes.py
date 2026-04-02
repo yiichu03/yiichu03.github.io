@@ -30,16 +30,87 @@ def escape_yaml(value: str) -> str:
     return value.replace('"', '\\"')
 
 
-def strip_front_matter(text: str) -> str:
+def strip_quotes(value: str) -> str:
+    value = value.strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+        return value[1:-1]
+    return value
+
+
+def parse_front_matter_block(block: str) -> dict[str, object]:
+    data: dict[str, object] = {}
+    current_list_key: str | None = None
+
+    for raw_line in block.splitlines():
+        line = raw_line.rstrip()
+        if not line or line.lstrip().startswith("#"):
+            continue
+
+        if current_list_key and line.lstrip().startswith("- "):
+            item = strip_quotes(line.lstrip()[2:])
+            current_items = data.setdefault(current_list_key, [])
+            if isinstance(current_items, list):
+                current_items.append(item)
+            continue
+
+        match = re.match(r"^([A-Za-z0-9_-]+):\s*(.*)$", line)
+        if not match:
+            current_list_key = None
+            continue
+
+        key, raw_value = match.groups()
+        raw_value = raw_value.strip()
+
+        if not raw_value:
+            data[key] = []
+            current_list_key = key
+            continue
+
+        if raw_value.startswith("[") and raw_value.endswith("]"):
+            inner = raw_value[1:-1].strip()
+            items = [] if not inner else [strip_quotes(part.strip()) for part in inner.split(",")]
+            data[key] = items
+            current_list_key = None
+            continue
+
+        data[key] = strip_quotes(raw_value)
+        current_list_key = None
+
+    return data
+
+
+def split_front_matter(text: str) -> tuple[dict[str, object], str]:
     if not text.startswith("---\n"):
-        return text
+        return {}, text
+
     parts = text.split("\n---\n", 1)
     if len(parts) != 2:
-        return text
-    return parts[1]
+        return {}, text
+
+    block = parts[0][4:]
+    return parse_front_matter_block(block), parts[1]
 
 
-def extract_title(text: str, fallback: str) -> tuple[str, str]:
+def normalize_tags(value: object) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip().lower() for item in value if str(item).strip()]
+    if isinstance(value, str) and value.strip():
+        return [value.strip().lower()]
+    return []
+
+
+def should_publish(metadata: dict[str, object]) -> bool:
+    publish = str(metadata.get("publish", "")).strip().lower()
+    tags = normalize_tags(metadata.get("tags"))
+    return publish == "github" or "github" in tags
+
+
+def extract_title(text: str, fallback: str, metadata: dict[str, object] | None = None) -> tuple[str, str]:
+    if metadata:
+        frontmatter_title = str(metadata.get("title", "")).strip()
+        if frontmatter_title:
+            return frontmatter_title, text.lstrip()
+
     lines = text.splitlines()
     for index, line in enumerate(lines):
         if line.startswith("# "):
@@ -139,8 +210,18 @@ def sync() -> int:
     if not SOURCE_DIR.exists():
         raise SystemExit(f"Source directory not found: {SOURCE_DIR}")
 
-    note_paths = sorted(SOURCE_DIR.rglob("*.md"))
-    note_index = build_note_index(note_paths)
+    all_note_paths = sorted(SOURCE_DIR.rglob("*.md"))
+
+    published_note_paths: list[Path] = []
+    parsed_sources: dict[Path, tuple[dict[str, object], str]] = {}
+    for note_path in all_note_paths:
+        source_text = note_path.read_text(encoding="utf-8")
+        metadata, body = split_front_matter(source_text)
+        parsed_sources[note_path] = (metadata, body)
+        if should_publish(metadata):
+            published_note_paths.append(note_path)
+
+    note_index = build_note_index(published_note_paths)
 
     shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
     shutil.rmtree(ASSET_DIR, ignore_errors=True)
@@ -151,11 +232,10 @@ def sync() -> int:
 
     copied_assets: dict[Path, str] = {}
 
-    for note_path in note_paths:
-        source_text = note_path.read_text(encoding="utf-8")
-        body = strip_front_matter(source_text)
+    for note_path in published_note_paths:
+        metadata, body = parsed_sources[note_path]
         fallback_title = note_path.stem
-        title, body = extract_title(body, fallback_title)
+        title, body = extract_title(body, fallback_title, metadata)
         body = render_links(body, note_path, note_index, copied_assets).rstrip() + "\n"
 
         rel = note_path.relative_to(SOURCE_DIR).with_suffix("")
@@ -175,7 +255,7 @@ def sync() -> int:
             encoding="utf-8",
         )
 
-    return len(note_paths)
+    return len(published_note_paths)
 
 
 if __name__ == "__main__":

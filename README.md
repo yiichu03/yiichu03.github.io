@@ -33,6 +33,8 @@ Check out the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy/wi
 
 This site includes a `Literature Notes` tab backed by notes in the sibling Obsidian vault folder `../10 Literature Notes`.
 
+Only notes with `publish: github` in frontmatter, or with `github` included in frontmatter `tags`, are synced.
+
 To sync local notes into the site repository, run:
 
 ```shell
