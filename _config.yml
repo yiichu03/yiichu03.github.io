@@ -200,6 +200,7 @@ defaults:
     values:
       layout: page
       permalink: /literature/:slug/
+      math: true
 
 sass:
   style: compressed
