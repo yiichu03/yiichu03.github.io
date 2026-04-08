@@ -1,16 +1,17 @@
 ---
-title: "{{title}}"
+title: "Deep Reinforcement Learning-Based Large-Scale Robot Exploration"
 slug: "Deep-Reinforcement-Learning-Based-Large-Scale-Robot-Exploration"
-updated_at: 2026-04-07 03:17:39 +0000
+updated_at: 2026-04-08 06:04:13 +0000
 source_path: "10 Literature Notes/Deep Reinforcement Learning-Based  Large-Scale Robot Exploration.md"
 ---
 
 ## Citation
 
-- Authors:
-- Year:
-- Venue:
-- Citekey:
+- Authors: Yuhong Cao, Rui Zhao, Yizhuo Wang, Bairan Xiang, and Guillaume Sartoretti
+- Year: 2024
+- Venue: IEEE Robotics and Automation Letters
+- Citekey: Cao2024LargeScaleDRLExploration
+
 
 ## Reading Context
 
