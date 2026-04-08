@@ -1,7 +1,7 @@
 ---
 title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware"
 slug: "ACT"
-updated_at: 2026-04-02 14:39:49 +0000
+updated_at: 2026-04-05 13:43:53 +0000
 source_path: "10 Literature Notes/ACT.md"
 ---
 
@@ -231,11 +231,12 @@ source_path: "10 Literature Notes/ACT.md"
 
 > Fill this part after your own paper reading, figure/table checking, and code tracing. This is the part that should gradually replace Part A.
 
+
 ### My summary
 
-- Problem:
-- Method:
-- Main result:
+- **Problem:** 想要做比较精细的任务，之前的方法大多需要昂贵且设置复杂的设备。所以希望可以通过低成本的系统、借助learning的方法去完成比较精细的操作任务。
+- **Method:** Action Chunking，以小段动作（动作序列）为单位去预测。
+- **Main result:** 实机实验有效且需要的数据量相对较少（应该是较少的意思，说是10min演示）
 
 ### Why it matters
 
@@ -244,7 +245,73 @@ source_path: "10 Literature Notes/ACT.md"
 ### What I now understand
 
 -
+### Questions, clarifications, and current understanding
 
+- **Trigger:** “actively compensating for errors”
+  - **My question:** 这里的“主动补偿误差”是什么意思？
+  - **Current understanding(AI):** 更像是闭环策略根据新观测持续修正前面动作造成的偏差，而不是显式建模一个误差控制器。**系统并不假设自己每一步都做得完全准确，而是在执行过程中持续观察结果，并根据偏差立刻修正后续动作。** 作者是在拿人类做类比：人做精细操作时，也不是靠一次性算准全部轨迹，而是边看边调。论文紧接着就提出用闭环视觉反馈、直接从图像到动作来学策略。
+  - **Why it matters(AI):** 这有助于理解本文为什么强调 closed-loop visual feedback。
+
+- **Trigger:** “learning the manipulation policy is much simpler than modeling the whole environment”
+  - **My question:** 这算是体现了一种系统/模型设计思想？类似于diffusion model学习噪声也是觉得噪声相比整个图片分布更容易学习？
+  - **Current understanding(AI):** 是的。作者是在做问题重表述：不先追求完整世界建模，而是选择一个更直接、更贴近任务接口的学习目标。
+```markdown
+在这篇论文里，作者的判断是：
+- “整个环境”包含复杂接触、摩擦、形变、透明物体视觉、物体间相互作用……
+- 如果你想先把这些都建模准确，再拿去规划，会非常难，工程量很大。
+相比之下，直接学一个闭环操作策略“看到这种状态就怎么动”，反而更直接。
+所以这确实是一种**问题重表述 / 目标重选型**的思想。
+你拿 diffusion 做类比，方向是对的，但要小心不要完全等同。
+相似点在于：
+- diffusion 不是直接拟合“整张图的复杂分布”，而是转成逐步去噪这个更容易学习的过程；
+- 这篇论文不是先建“整个物理世界模型”，而是直接学“给定观测该怎么动作”。
+两者都体现了一个共同思想：
+**把原问题变成一个更容易优化、更贴近决策接口的学习目标。**
+但差异也很大：
+- diffusion 里的“学噪声”本质上还是在做生成建模，只是换了参数化方式；
+- 这里作者是在比较两条完全不同的路线：  
+    **世界建模 + 规划** vs **直接策略学习**。
+- 所以它更像“任务接口设计”和“系统分解选择”，不只是损失函数或参数化技巧的变化。
+  
+换句话说，你可以把它们放在同一个“设计哲学”下理解，但不要把两者看成同一种技术操作。
+```
+  - **Why it matters(AI):** 这帮助我把本文理解为 systems + learning 的共同设计，而不只是一个网络结构创新。
+
+- **Trigger:** “a closed-loop policy can react ... rather than precisely anticipating ...”
+  - **My question:** 相比复杂物理建模，这种做法是不是拿可解释性、泛化性、鲁棒性做了交换？
+  - **Current understanding(AI):** 通常会有这种 trade-off.
+```markdown
+#### 可解释性
+
+这个肯定会弱一些。
+
+- 显式物理建模里，你知道接触模型、状态变量、规划目标是什么；
+- 端到端策略里，输入图像、输出动作，中间很多决策依据是隐式的。
+
+所以从“为什么它这样动”这个角度，确实通常没有物理模型那么透明。
+
+#### 泛化性
+
+这个要分情况。
+
+- 如果换的是**相近分布内的小变化**，闭环策略有时反而很强，因为它会实时纠偏，不需要把每个细节都算准。
+- 但如果换到**任务机制变了、物理规律变了、对象类别变了很多**，只靠 imitation policy 往往就容易掉性能。
+
+这篇论文本身也更偏向**单任务、少量示范、高闭环精度**，不是在强调大范围跨任务泛化。
+
+#### 鲁棒性
+
+这里也不能一概而论。
+
+- 对**小扰动、小偏差**，闭环策略常常比开环计划更鲁棒，因为它会看着改。
+- 但对**分布外情况**、视觉遮挡、物体属性明显变化，端到端策略可能又不如有强先验的模型方法稳。
+
+所以更准确的说法不是“它一定更不鲁棒”，而是：
+
+> **它把鲁棒性的来源，从‘模型先验正确’换成了‘数据覆盖 + 闭环反馈 + 学到的反应能力’。**
+
+```
+  - **Status(AI):** 这是当前判断，还需要结合实验与后续工作进一步验证。
 ### Useful details
 
 - Definitions / notation:
@@ -273,7 +340,7 @@ source_path: "10 Literature Notes/ACT.md"
 - 读清论文里 ACT 的 chunk 长度、loss、temporal ensembling 定义。
 - 对照 LeRobot 代码，区分论文算法本体和后续工程封装。
 - 单独弄明白 `migrate_policy_normalization.py` 和 processor / normalization 文件的作用。
-- 如果准备公开到网站，再把 `publish: private` 改成 `publish: github` 或把 `github` 加进 `tags`。
+
 
 ## Publication
 
