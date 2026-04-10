@@ -1,7 +1,7 @@
 ---
 title: "FrontierNet: Learning Visual Cues to Explore"
 slug: "FrontierNet-Learning-Visual-Cues-to-Explore"
-updated_at: 2026-04-09 14:40:35 +0000
+updated_at: 2026-04-10 06:51:34 +0000
 source_path: "10 Literature Notes/FrontierNet Learning Visual Cues to Explore.md"
 ---
 
@@ -39,42 +39,108 @@ source_path: "10 Literature Notes/FrontierNet Learning Visual Cues to Explore.md
 
 - Paper goal: Build an efficient autonomous exploration system that visual cues from individual camera images to propose frontiers and rank them by expected exploration value.
 论文目标是做一个 efficient exploration system，直接利用单张相机图像中的 visual cues 来 propose frontier，并估计它们的 exploration value。
-- Core challenge: Frontier extraction is usually done in 3D maps, but map quality is fragile and appearance information
-- Authors' claim:
+- Core challenge: Frontier extraction is usually done in 3D maps, but map quality is fragile and appearance information from RGB is typically not used directly at the goal-proposal stage.传统frontier extraction 通常在3D map上完成，但3D map质量容易受传感器、重建误差、表示方式影响；同时RGB中的texture / color / semantic context往往没有被直接用于goal proposal.
+- Authors' claim: A learning-based visual frontier proposal system can improve exploration efficiency, especially early on, while remaining robust robust even when using monocular depth priors instead of perfect depth. 一个learning-based visual frontier proposal system能显著提升exploration efficiency，尤其是前期探索效率；而且就算用monocular depth prior而不是perfect depth, 也依然有较强鲁棒性。
 
 ### Method
 
-- Inputs / observations:
-- Outputs / targets:
+- Inputs / observations: Posed RGB images plus a monocular depth prior; the system may also maintain an optional 3D occupancy map for safer planning and frontier updates. 输入主要是posed RGB images + monocular depth prior. 此外，系统可以选择维护一个3D occupancy map， 用于safer planning和frontier update，但这不是proposal 阶段的核心依赖
+- Outputs / targets: FrontierNet predicts a 2D frontier distance field and a discretized 2D info-gain map; after post-processing, the system outputs sparse 3D frontiers with position, viewing direction, and utility-related gain. 网络输出是两个2D prediction，经过后处理得到sparse 3D frontiers.
 - Main modules:
-- Training objective:
-- Inference / rollout:
-- Key assumptions:
+	- FrontierNet with two heads: frontier proposal head and info-gain prediction head
+	- Ground-truth generation from HM3D vocelized scenes.
+	- Anchoring in 3D via viewpoint generation, HDBSCAN clustering, and 3D lifting.
+	- Frontier update and utility-based path planning
+从system view来看，主要模块包括：FrontierNet -> GT generation pipeline -> 3D anchoring -> frontier update -> planner. 其中3D anchoring 又分成viewpoint generation、HDBSCAN clustering 和 3D lifting.
+- Training objective: A weighted sum of L1 loss for the normalized distance field and cross-entropy plus multi-class Dice loss for the discretized info-gain prediction.训练目标是多任务loss，distance filed这边用L1 loss, info gain classification这边用cross entropy + multi-class Dice loss, 最后做weighted sum.
+- Inference / rollout: Predict 2D frontier pixels and gain, recover candidate frontier pixels by thresholding the distance field, estimate viewing directions from depth gradients, cluster pixels, lift clusters to 3D, update frontier list, and select the next goal using info-gain-over-distance utility. inference时的pipeline很清楚：predict 2D frontier + gain -> threshold distance field 得到frontier pixels -> 用depth gradient 推 viewing direction -> clustering -> lifting to 3D -> frontier update -> planner选下一目标
+- Key assumptions: 
+	- Visual appearance and monocular depth cues are sufficient to infer useful exploration frontiers.（所以可不可以是输入图片序列呢？？）
+	- Information gain can be learned from single-image context using lables generated with privileged 3D scene knowledge.
+	- Projected frontier pixels aligh with depth discontinuities strongly enough to support robust proposal and lifting
+	- 单张图像中的appearance+depth cues足以推断有用的frontier；
+	- info gain可以通过带privileged 3D supervision的方式学出来
+	- frontier pixels 和 depth discontinuity之间存在较稳定对应关系
 
 ### Experiments
 
-- Tasks / datasets:
-- Baselines:
-- Main metrics:
+- Tasks / datasets: Simulated exploration on unseen HM3D validation scenes, plus real-world deployment on a Boston Dynamics Spot robot in a large indoor environment.
+实验包括两部分：一部分是在HM3D unseen validation scenes上面做simulation，另一部分是在Boston Dynamics Spot上做real-world validation。
+- Baselines: Classic frontier-based exploration, NBVP，SEER, and a re-implemented SEER frontier proposal paired with the authors’ planner for fairer comparison.  
+  baseline 包括 classic frontier-based method、NBVP、SEER，以及作者自己 re-implement 的一个 SEER 版本。
+- Main metrics: Vox@25, Vox@50, Vox@100, and success rate. These measure mapped volume at matched exploration stages and final success.  
+  主要指标是 **Vox@25 / Vox@50 / Vox@100 / Success rate**。  
+  你可以把它们理解成：在 exploration 不同阶段，已经覆盖了多少 scene volume。
 - Best numbers worth remembering:
+	- With simulator depth, their method reaches mean Vox@25 = 32.7, Vox@50 = 58.6, Vox@100 = 71.5, success = 88.6%.
+	  - With monocular depth, it still reaches mean Vox@25 = 32.7, Vox@50 = 55.5, Vox@100 = 70.6, success = 86.5%.
+	  - The paper highlights about a 15% improvement over the second-best method at Vox@50 overall.  
+	  最值得记的数字是：  
+	  - perfect/simulator depth 下：**32.7 / 58.6 / 71.5 / 88.6%**  
+	  - monocular depth 下：**32.7 / 55.5 / 70.6 / 86.5%**  
+	  - 作者特别强调：在 **Vox@50** 上，相比 second-best method 大约高 **15%**。
 - Strongest evidence:
+	- The method outperforms baselines across 10 diverse scenes, especially at early and mid exploration stages.
+	  - Ablations show both learned distance-field prediction and info-gain prediction matter.
+	  - A map-free version still performs competitively, supporting the claim that dense maps are not essential for goal proposal.
+	  - Real-world Spot experiments show sim-to-real robustness and real-time inference around 5 Hz.  
+	  strongest evidence 主要有四个：  
+	  1. 在 10 个 diverse scenes 上 consistently 优于 baselines；  
+	  2. ablation 说明 distance field 和 info gain 两部分都重要；  
+	  3. map-free setup 仍然能 work，支撑了 visual-first proposal 的主张；  
+	  4. real-world Spot experiment 显示有一定 sim-to-real robustness，推理速度大约 **5 Hz**。
 
 ### Innovation / contributions
 
-- System contribution:
-- Algorithm contribution:
-- Experimental contribution:
-- Research perspective contribution:
+- System contribution: An exploration system that uses visual cues in individual camera images to propose and rank frontiers instead of extracting exploration goals from dense 3D maps.  把 exploration goal proposal 从 dense 3D map operation 转成了 visual-cue-driven proposal。
+- Algorithm contribution: FrontierNet, a two-head learning model for joint frontier proposal and information-gain prediction from RGB plus monocular depth prior.   FrontierNet 本身：jointly 做 frontier proposal 和 info-gain prediction。
+- Experimental contribution:  Extensive validation in simulation across 10 HM3D scenes and real-world deployment on a Spot robot.  benchmark 相对比较全面，不只是在少数两个场景里展示结果。
+- Research perspective contribution:  The paper reframes exploration goal extraction as something that can be inferred directly from visual observations, not only from dense 3D geometry.  这篇论文的意义在于：它把“frontier extraction 必须依赖 3D map”这个默认前提挑战掉了。
 
 ### Limitations
 
--
+- The training supervision depends on privileged 3D scene information and a fairly elaborate label-generation pipeline, which may make the approach conceptually elegant at inference but expensive to prepare.
+- Although the proposal stage is visual-first, the full system still benefits from an occupancy map for safer planning and frontier updating, so it is not purely map-free in its strongest setting.
+- The 3D lifting and planning stages still depend on depth quality; monocular depth errors can plausibly affect robustness even though the method is more tolerant than baselines.
+- Real-world validation is promising but limited in scope compared with the simulation benchmark.  
+  局限性也比较明确：  
+  第一，training label 的生成依赖完整 3D scene knowledge；  
+  第二，最强 setting 下依然会利用 occupancy map；  
+  第三，3D lifting 和 planning 还是受 depth quality 影响；  
+  第四，real-world validation 目前规模还不算大。
 
 ### AI Questions to Verify
 
 - Which claims should I check in the figures/tables?
+	- Table I: Is the 15% Vox@50 advantage the most convincing main result?
+	  - Table II: Does RGB mainly help info-gain estimation while depth mainly helps frontier detection?
+	  - Figure 9: How much do distance-field prediction and info-gain prediction each contribute?
+	  - Table III / Figure 10: How competitive is the map-free setup really?  
+	  建议重点核查 Table I、Table II、Figure 9、Table III / Figure 10，这几个地方基本决定了这篇论文的说服力。
 - Which design choices seem most important?
+	- Predicting a distance field instead of a binary frontier mask.
+	  - Discretizing info gain into 11 classes instead of regressing it directly.
+	  - Refining projected frontier labels using a depth discontinuity mask.
+	  - Estimating viewing direction from local depth gradients and then clustering in 2D before 3D lifting.  
+	  最关键的 design choices 包括：  
+	  用 **distance field** 替代 binary mask；  
+	  用 **classification** 替代 direct regression；  
+	  用 **depth discontinuity** refine labels；  
+	  先在 2D clustering，再做 3D lifting。
 - Which details are still vague after only reading the abstract/introduction?
+	- Exactly how the ground-truth info gain is approximated from 3D frontier voxels.
+	  - How robust the 3D lifting is when depth priors are noisy or mis-scaled.
+	  - How sensitive the planner is to thresholds for frontier merging, invalidation, and utility ranking.
+	  - Whether the gains come mostly from visual proposal quality or partly from stronger overall engineering and benchmarking.  
+	  如果只看 abstract / intro，最容易还不清楚的是：  
+	  1. GT info gain 到底怎么近似生成；  
+	  2. noisy monocular depth 对 lifting 的影响有多大；  
+	  3. planner 对阈值是否敏感；  
+	  4. improvement 究竟主要来自 model，还是部分来自更好的系统工程。
+
+
+
+
 
 ## Part B — My own reading notes
 
