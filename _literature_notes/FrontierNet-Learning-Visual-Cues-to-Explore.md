@@ -1,9 +1,14 @@
 ---
 title: "FrontierNet: Learning Visual Cues to Explore"
 slug: "FrontierNet-Learning-Visual-Cues-to-Explore"
+date: 2026-04-09 14:40:42 +0000
+published_at: 2026-04-09 14:40:42 +0000
 updated_at: 2026-04-10 06:51:34 +0000
 source_path: "10 Literature Notes/FrontierNet Learning Visual Cues to Explore.md"
 ---
+
+> Published: 2026-04-09
+> Updated: 2026-04-10 06:51 UTC
 
 ## Citation
 

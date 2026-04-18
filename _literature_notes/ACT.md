@@ -1,9 +1,14 @@
 ---
 title: "Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware"
 slug: "ACT"
+date: 2026-04-02 14:40:21 +0000
+published_at: 2026-04-02 14:40:21 +0000
 updated_at: 2026-04-05 13:43:53 +0000
 source_path: "10 Literature Notes/ACT.md"
 ---
+
+> Published: 2026-04-02
+> Updated: 2026-04-05 13:43 UTC
 
 ## Citation
 
