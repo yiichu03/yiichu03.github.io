@@ -228,7 +228,7 @@ order: 1
   <div class="liy-edu-list">
     <div class="liy-edu-item">
       <div>
-        <div class="liy-edu-school">National University of Singapore (QS #8)</div>
+        <div class="liy-edu-school">National University of Singapore</div>
         <div class="liy-edu-degree">M.Eng. Computer Engineering &nbsp;·&nbsp; GPA 4.7 / 5.0</div>
         <div class="liy-edu-degree" style="opacity:0.6;">Robotics and Embodied AI (A+) &nbsp;·&nbsp; Machine Learning with Applications (A)</div>
       </div>
@@ -236,7 +236,7 @@ order: 1
     </div>
     <div class="liy-edu-item">
       <div>
-        <div class="liy-edu-school">Beijing Jiaotong University (211)</div>
+        <div class="liy-edu-school">Beijing Jiaotong University</div>
         <div class="liy-edu-degree">B.Eng. Computer Science &nbsp;·&nbsp; GPA 3.76 / 4.0</div>
         <div class="liy-edu-degree" style="opacity:0.6;">First-Class Scholarship &nbsp;·&nbsp; Outstanding Graduate Thesis</div>
       </div>
@@ -282,7 +282,7 @@ order: 1
         <span class="liy-exp-title">Multi-Sensor Robot Navigation Research <span class="liy-exp-type liy-type-research">Research</span></span>
         <span class="liy-exp-date">Aug 2025 – Dec 2025</span>
       </div>
-      <div class="liy-exp-org">Robotics Navigation Project &nbsp;·&nbsp; NUS</div>
+      <div class="liy-exp-org">NUS CORE Lab</div>
       <div class="liy-exp-body">
         <ul>
           <li>Built a stereo thermal / RGB-D / LiDAR data acquisition pipeline with hardware-level time synchronization and calibration for low-light and visually degraded environments.</li>
@@ -298,7 +298,7 @@ order: 1
         <span class="liy-exp-title">DRL-based Indoor Autonomous Exploration <span class="liy-exp-type liy-type-research">Research</span></span>
         <span class="liy-exp-date">Dec 2025 – Present</span>
       </div>
-      <div class="liy-exp-org">Robotics Navigation Project &nbsp;·&nbsp; NUS</div>
+      <div class="liy-exp-org">NUS CORE Lab</div>
       <div class="liy-exp-body">
         <ul>
           <li>Identified failure modes of TARE planner in narrow corridors and junctions (goal=NaN, frontier utility collapse); restructured the 3D SLAM → 2D OccupancyGrid perception-planning interface.</li>
@@ -471,7 +471,7 @@ order: 1
         <span class="liy-exp-title">多传感器机器人导航与定位研究 <span class="liy-exp-type liy-type-research">科研</span></span>
         <span class="liy-exp-date">2025.08 – 2025.12</span>
       </div>
-      <div class="liy-exp-org">机器人导航研究项目 &nbsp;·&nbsp; 新加坡国立大学</div>
+      <div class="liy-exp-org">新加坡国立大学 CORE Lab</div>
       <div class="liy-exp-body">
         <ul>
           <li>面向低照度与视觉退化场景，搭建双目热红外 / RGB-D / LiDAR 多传感器采集链路，完成硬件时间同步、内外参标定。</li>
@@ -487,7 +487,7 @@ order: 1
         <span class="liy-exp-title">基于 DRL 的室内自主探索导航系统重构 <span class="liy-exp-type liy-type-research">科研</span></span>
         <span class="liy-exp-date">2025.12 – 至今</span>
       </div>
-      <div class="liy-exp-org">机器人导航研究项目 &nbsp;·&nbsp; 新加坡国立大学</div>
+      <div class="liy-exp-org">新加坡国立大学 CORE Lab</div>
       <div class="liy-exp-body">
         <ul>
           <li>分析 TARE 规划器在窄走廊、路口场景下的 goal=NaN 与 frontier utility 失效问题，梳理 3D 点云 SLAM 到 2D 占用栅格的感知-规划接口。</li>
