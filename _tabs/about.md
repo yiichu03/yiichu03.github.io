@@ -191,7 +191,7 @@ order: 1
   <img src="/assets/img/avatar.jpg" alt="Liu Yi" class="liy-avatar">
   <div class="liy-profile-info">
     <h1>Liu Yi <span class="liy-name-sub">刘弈</span></h1>
-    <p class="liy-affil">M.Eng. Computer Engineering &nbsp;·&nbsp; National University of Singapore</p>
+    <p class="liy-affil">M.Sc. Computer Engineering &nbsp;·&nbsp; National University of Singapore</p>
     <span class="liy-seeking">🔍 Seeking research internship opportunities in robotics &amp; AI</span>
     <div class="liy-contacts">
       <a class="liy-contact-link" href="mailto:e1538633@u.nus.edu">
@@ -229,7 +229,7 @@ order: 1
     <div class="liy-edu-item">
       <div>
         <div class="liy-edu-school">National University of Singapore</div>
-        <div class="liy-edu-degree">M.Eng. Computer Engineering &nbsp;·&nbsp; GPA 4.7 / 5.0</div>
+        <div class="liy-edu-degree">M.Sc. Computer Engineering &nbsp;·&nbsp; GPA 4.7 / 5.0</div>
         <div class="liy-edu-degree" style="opacity:0.6;">Robotics and Embodied AI (A+) &nbsp;·&nbsp; Machine Learning with Applications (A)</div>
       </div>
       <div class="liy-edu-right">Aug 2025 – Dec 2026<br>Singapore</div>
