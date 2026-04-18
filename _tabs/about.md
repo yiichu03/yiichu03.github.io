@@ -578,9 +578,16 @@ function liySetLang(lang) {
     btnEn.classList.add('active');
     btnZh.classList.remove('active');
   }
+  // Propagate lang to all "Details" links so the project page opens in the same language
+  document.querySelectorAll('a.liy-exp-more').forEach(function(a) {
+    var base = a.href.split('?')[0];
+    a.href = base + '?lang=' + lang;
+  });
   try { localStorage.setItem('liy-lang', lang); } catch(e) {}
 }
 (function() {
-  try { var s = localStorage.getItem('liy-lang'); if (s === 'zh') liySetLang('zh'); } catch(e) {}
+  // init: always call setLang so detail links get ?lang= from the start
+  var saved; try { saved = localStorage.getItem('liy-lang'); } catch(e) {}
+  liySetLang(saved === 'zh' ? 'zh' : 'en');
 })();
 </script>
