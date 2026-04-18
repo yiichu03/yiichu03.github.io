@@ -2,3 +2,69 @@
 layout: home
 # Index page
 ---
+
+<style>
+.liy-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  padding: 1.6rem 1.8rem;
+  margin-bottom: 2.2rem;
+  border-radius: 12px;
+  border: 1px solid var(--border-color, #e5e5e5);
+  background: var(--card-bg, transparent);
+}
+.liy-hero-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top;
+  flex-shrink: 0;
+  border: 2px solid var(--border-color, #e0e0e0);
+}
+.liy-hero-info { flex: 1; }
+.liy-hero-info h2 { font-size: 1.35rem; font-weight: 700; margin: 0 0 0.2rem 0; }
+.liy-hero-sub { font-size: 0.88rem; opacity: 0.75; margin: 0 0 0.55rem 0; }
+.liy-hero-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.8rem; }
+.liy-hero-tag {
+  font-size: 0.75rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 4px;
+  background: #eef2f8;
+  color: #2d4a7a;
+}
+[data-mode="dark"] .liy-hero-tag { background: #1e2d45; color: #93b4db; }
+.liy-hero-btn {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.35rem 1rem;
+  border-radius: 6px;
+  background: var(--link-color, #3584e4);
+  color: #fff !important;
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+.liy-hero-btn:hover { opacity: 0.85; }
+@media (max-width: 520px) {
+  .liy-hero { flex-direction: column; text-align: center; }
+  .liy-hero-tags { justify-content: center; }
+}
+</style>
+
+<div class="liy-hero">
+  <img class="liy-hero-avatar" src="/assets/img/avatar.jpg" alt="Liu Yi">
+  <div class="liy-hero-info">
+    <h2>Liu Yi &nbsp;<span style="font-weight:400;opacity:0.6;font-size:1rem;">刘弈</span></h2>
+    <p class="liy-hero-sub">M.Eng. Computer Engineering · NUS &nbsp;|&nbsp; 🔍 Seeking research internship</p>
+    <div class="liy-hero-tags">
+      <span class="liy-hero-tag">Robot Navigation</span>
+      <span class="liy-hero-tag">SLAM</span>
+      <span class="liy-hero-tag">3D Vision</span>
+      <span class="liy-hero-tag">Embodied AI</span>
+      <span class="liy-hero-tag">ROS2</span>
+    </div>
+    <a class="liy-hero-btn" href="/about/">About Me →</a>
+  </div>
+</div>

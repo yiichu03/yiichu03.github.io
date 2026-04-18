@@ -11,7 +11,6 @@ order: 1
   display: flex;
   justify-content: flex-end;
   margin-bottom: 1.6rem;
-  gap: 0;
 }
 .liy-lang-btn {
   padding: 0.28rem 0.9rem;
@@ -26,10 +25,7 @@ order: 1
 }
 .liy-lang-btn:first-child { border-radius: 6px 0 0 6px; }
 .liy-lang-btn:last-child  { border-radius: 0 6px 6px 0; border-left: none; }
-.liy-lang-btn.active {
-  background: var(--link-color, #3584e4);
-  color: #fff;
-}
+.liy-lang-btn.active { background: var(--link-color, #3584e4); color: #fff; }
 
 /* ── Profile Header ── */
 .liy-profile {
@@ -48,23 +44,9 @@ order: 1
   border: 3px solid var(--border-color, #e0e0e0);
 }
 .liy-profile-info { flex: 1; }
-.liy-profile-info h1 {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin: 0 0 0.3rem 0;
-}
-.liy-name-sub {
-  display: inline-block;
-  font-size: 1.1rem;
-  font-weight: 400;
-  opacity: 0.6;
-  margin-left: 0.4rem;
-}
-.liy-affil {
-  font-size: 0.95rem;
-  opacity: 0.8;
-  margin: 0 0 0.5rem 0;
-}
+.liy-profile-info h1 { font-size: 1.8rem; font-weight: 700; margin: 0 0 0.3rem 0; }
+.liy-name-sub { display: inline-block; font-size: 1.1rem; font-weight: 400; opacity: 0.6; margin-left: 0.4rem; }
+.liy-affil { font-size: 0.95rem; opacity: 0.8; margin: 0 0 0.5rem 0; }
 .liy-seeking {
   display: inline-block;
   font-size: 0.82rem;
@@ -75,16 +57,8 @@ order: 1
   color: #1a6fa8;
   margin-bottom: 0.9rem;
 }
-[data-mode="dark"] .liy-seeking {
-  background: #1a3550;
-  color: #7ec8f0;
-}
-.liy-contacts {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  align-items: center;
-}
+[data-mode="dark"] .liy-seeking { background: #1a3550; color: #7ec8f0; }
+.liy-contacts { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
 .liy-contact-link {
   display: inline-flex;
   align-items: center;
@@ -99,12 +73,12 @@ order: 1
 }
 .liy-contact-link:hover { border-color: var(--link-color, #3584e4); }
 
-/* ── Section styling ── */
+/* ── Section ── */
 .liy-section { margin-top: 2rem; }
 .liy-section h2 {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   padding-bottom: 0.4rem;
   border-bottom: 2px solid var(--link-color, #3584e4);
@@ -112,20 +86,14 @@ order: 1
 }
 
 /* ── Skills ── */
-.liy-skill-group { margin-bottom: 0.7rem; display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.liy-skill-group { margin-bottom: 0.65rem; display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
 .liy-skill-label { font-size: 0.78rem; font-weight: 600; opacity: 0.6; min-width: 5.5rem; flex-shrink: 0; }
 .liy-skill-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-.liy-tag {
-  font-size: 0.78rem;
-  padding: 0.15rem 0.55rem;
-  border-radius: 4px;
-  background: #eef2f8;
-  color: #2d4a7a;
-}
+.liy-tag { font-size: 0.78rem; padding: 0.15rem 0.55rem; border-radius: 4px; background: #eef2f8; color: #2d4a7a; }
 [data-mode="dark"] .liy-tag { background: #1e2d45; color: #93b4db; }
 
-/* ── Experience Timeline ── */
-.liy-exp-list { display: flex; flex-direction: column; gap: 1.2rem; }
+/* ── Experience ── */
+.liy-exp-list { display: flex; flex-direction: column; gap: 1.3rem; }
 .liy-exp-item {
   border-left: 3px solid var(--link-color, #3584e4);
   padding-left: 1rem;
@@ -133,10 +101,40 @@ order: 1
 .liy-exp-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.3rem; }
 .liy-exp-title { font-weight: 700; font-size: 0.97rem; }
 .liy-exp-date { font-size: 0.78rem; opacity: 0.6; white-space: nowrap; }
-.liy-exp-org { font-size: 0.83rem; opacity: 0.75; margin: 0.15rem 0 0.4rem 0; }
+.liy-exp-org { font-size: 0.83rem; opacity: 0.75; margin: 0.2rem 0 0.4rem 0; }
 .liy-exp-body { font-size: 0.88rem; line-height: 1.65; }
 .liy-exp-body ul { margin: 0.3rem 0 0 1rem; padding: 0; }
 .liy-exp-body li { margin-bottom: 0.25rem; }
+.liy-exp-footer { display: flex; justify-content: flex-end; margin-top: 0.5rem; }
+.liy-exp-more {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--link-color, #3584e4);
+  text-decoration: none !important;
+  transition: opacity 0.15s;
+}
+.liy-exp-more:hover { opacity: 0.75; }
+
+/* ── Experience type badges ── */
+.liy-exp-type {
+  display: inline-block;
+  font-size: 0.67rem;
+  font-weight: 700;
+  padding: 0.08rem 0.42rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  vertical-align: middle;
+  margin-left: 0.4rem;
+  position: relative;
+  top: -1px;
+}
+.liy-type-research { background: #ede8ff; color: #5b3ab0; }
+.liy-type-intern   { background: #e3f5e9; color: #2d7d4f; }
+.liy-type-thesis   { background: #fff3e0; color: #b85c00; }
+[data-mode="dark"] .liy-type-research { background: #2a1f4a; color: #b09eff; }
+[data-mode="dark"] .liy-type-intern   { background: #1a3528; color: #6dcf96; }
+[data-mode="dark"] .liy-type-thesis   { background: #3b2800; color: #ffa040; }
 
 /* ── Publications ── */
 .liy-pub-item {
@@ -158,19 +156,14 @@ order: 1
   color: #fff;
   margin-bottom: 0.35rem;
 }
-.liy-pub-accepted {
-  font-size: 0.75rem;
-  color: #2e8b57;
-  font-weight: 600;
-  margin-left: 0.4rem;
-}
+.liy-pub-accepted { font-size: 0.75rem; color: #2e8b57; font-weight: 600; margin-left: 0.4rem; }
 [data-mode="dark"] .liy-pub-accepted { color: #5dbb8a; }
 
 /* ── Education ── */
 .liy-edu-list { display: flex; flex-direction: column; gap: 0.9rem; }
 .liy-edu-item { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.3rem; }
-.liy-edu-left .liy-edu-school { font-weight: 700; font-size: 0.97rem; }
-.liy-edu-left .liy-edu-degree { font-size: 0.85rem; opacity: 0.8; margin-top: 0.1rem; }
+.liy-edu-school { font-weight: 700; font-size: 0.97rem; }
+.liy-edu-degree { font-size: 0.85rem; opacity: 0.8; margin-top: 0.1rem; }
 .liy-edu-right { text-align: right; font-size: 0.82rem; opacity: 0.65; }
 
 /* ── Responsive ── */
@@ -181,7 +174,6 @@ order: 1
   .liy-edu-item { flex-direction: column; }
   .liy-edu-right { text-align: left; }
 }
-
 .liy-hidden { display: none !important; }
 </style>
 
@@ -191,7 +183,8 @@ order: 1
   <button class="liy-lang-btn" id="btn-zh" onclick="liySetLang('zh')">中文</button>
 </div>
 
-<!-- ════════════════════════ ENGLISH ════════════════════════ -->
+
+<!-- ════════════════════ ENGLISH ════════════════════ -->
 <div id="liy-en">
 
 <div class="liy-profile">
@@ -215,7 +208,7 @@ order: 1
 
 <div class="liy-section">
   <h2>About Me</h2>
-  <p>I am a Master's student in Computer Engineering at the National University of Singapore (NUS), with a strong interest in robot autonomy and intelligent systems. My work spans multi-sensor navigation (thermal, LiDAR, 4D radar), SLAM, end-to-end learning for robotic control, and real-world system deployment on UGV and humanoid robot platforms.</p>
+  <p>I am a Master's student in Computer Engineering at the National University of Singapore (NUS), with a strong interest in robot autonomy and intelligent systems. My work spans multi-sensor navigation (thermal, LiDAR, 4D radar), SLAM, end-to-end learning for robotic control, 3D visual perception, and real-world system deployment on UGV and humanoid robot platforms.</p>
   <p>I enjoy bridging learning-based methods with practical robotic systems — getting things to actually run on hardware is what excites me most.</p>
 </div>
 
@@ -224,9 +217,32 @@ order: 1
   <ul>
     <li>Multi-sensor robot navigation — thermal, LiDAR, 4D mmWave radar</li>
     <li>SLAM and autonomous exploration in unknown environments</li>
+    <li>3D visual perception and scene reconstruction</li>
     <li>End-to-end learning for robotic perception and control</li>
     <li>Embodied AI and humanoid robot systems</li>
   </ul>
+</div>
+
+<div class="liy-section">
+  <h2>Education</h2>
+  <div class="liy-edu-list">
+    <div class="liy-edu-item">
+      <div>
+        <div class="liy-edu-school">National University of Singapore (QS #8)</div>
+        <div class="liy-edu-degree">M.Eng. Computer Engineering &nbsp;·&nbsp; GPA 4.7 / 5.0</div>
+        <div class="liy-edu-degree" style="opacity:0.6;">Robotics and Embodied AI (A+) &nbsp;·&nbsp; Machine Learning with Applications (A)</div>
+      </div>
+      <div class="liy-edu-right">Aug 2025 – Dec 2026<br>Singapore</div>
+    </div>
+    <div class="liy-edu-item">
+      <div>
+        <div class="liy-edu-school">Beijing Jiaotong University (211)</div>
+        <div class="liy-edu-degree">B.Eng. Computer Science &nbsp;·&nbsp; GPA 3.76 / 4.0</div>
+        <div class="liy-edu-degree" style="opacity:0.6;">First-Class Scholarship &nbsp;·&nbsp; Outstanding Graduate Thesis</div>
+      </div>
+      <div class="liy-edu-right">Sep 2021 – Jun 2025<br>Beijing, China</div>
+    </div>
+  </div>
 </div>
 
 <div class="liy-section">
@@ -263,76 +279,81 @@ order: 1
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">Multi-Sensor Robot Navigation Research</span>
+        <span class="liy-exp-title">Multi-Sensor Robot Navigation Research <span class="liy-exp-type liy-type-research">Research</span></span>
         <span class="liy-exp-date">Aug 2025 – Dec 2025</span>
       </div>
       <div class="liy-exp-org">Robotics Navigation Project &nbsp;·&nbsp; NUS</div>
       <div class="liy-exp-body">
         <ul>
-          <li>Built a stereo thermal / RGB-D / LiDAR data acquisition pipeline with hardware-level time synchronization and intrinsic/extrinsic calibration for low-light and visually degraded environments.</li>
+          <li>Built a stereo thermal / RGB-D / LiDAR data acquisition pipeline with hardware-level time synchronization and calibration for low-light and visually degraded environments.</li>
           <li>Integrated BridgeDepth, NVBlox, Nav2, and SLAM pose input on NVIDIA AGX Orin for point-goal navigation on a UGV; validated the full system on real hardware.</li>
           <li>Connected RPM-Net (scan-to-scan soft correspondences) and Radar-Transformer (scan-to-submap hard correspondences) into a radar-inertial odometry backend (IEKF / VGICP); evaluated on ColoRadar and SNAIL datasets.</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/multi-sensor-nav/">Details →</a></div>
     </div>
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">DRL-based Indoor Autonomous Exploration</span>
+        <span class="liy-exp-title">DRL-based Indoor Autonomous Exploration <span class="liy-exp-type liy-type-research">Research</span></span>
         <span class="liy-exp-date">Dec 2025 – Present</span>
       </div>
       <div class="liy-exp-org">Robotics Navigation Project &nbsp;·&nbsp; NUS</div>
       <div class="liy-exp-body">
         <ul>
-          <li>Identified failure modes of the TARE planner in narrow corridors and junctions (goal=NaN, frontier utility collapse); restructured the 3D SLAM → 2D OccupancyGrid perception-planning interface.</li>
-          <li>Replaced TARE with ARiADNE (DRL-based explorer) using a minimal-substitution strategy, integrating Livox/Hesai SLAM, OctoMap/OccupancyGrid, and waypoint interfaces while keeping the downstream local planner.</li>
-          <li>Built smoke-test and experiment orchestration workflows in Unity and Gazebo; pre-trained checkpoint completed exploration in all 5 test episodes, confirming weight compatibility between training and ROS2 inference repos.</li>
+          <li>Identified failure modes of TARE planner in narrow corridors and junctions (goal=NaN, frontier utility collapse); restructured the 3D SLAM → 2D OccupancyGrid perception-planning interface.</li>
+          <li>Replaced TARE with ARiADNE (DRL-based explorer) using a minimal-substitution strategy, integrating Livox/Hesai SLAM, OctoMap/OccupancyGrid, and waypoint interfaces while preserving the downstream local planner.</li>
+          <li>Built smoke-test and experiment orchestration in Unity and Gazebo; pre-trained checkpoint completed exploration in all 5 test episodes, confirming weight compatibility between training and ROS2 inference repos.</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/drl-exploration/">Details →</a></div>
     </div>
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">Humanoid Robot Perception &amp; Control Integration</span>
+        <span class="liy-exp-title">Humanoid Robot Perception &amp; Control Integration <span class="liy-exp-type liy-type-intern">Internship</span></span>
         <span class="liy-exp-date">Feb 2026 – Mar 2026</span>
       </div>
-      <div class="liy-exp-org">Fatfish AI &nbsp;·&nbsp; Robotics Intern</div>
+      <div class="liy-exp-org">Fatfish AI</div>
       <div class="liy-exp-body">
         <ul>
           <li>On the Fourier N1 platform: connected on-robot RGB-D capture, remote visual inference on Orin, and local arm control into a unified pipeline.</li>
-          <li>Implemented cup/bottle visual following for the right arm; added RTT feedback and status diagnostics to assist real-hardware debugging sessions.</li>
-          <li>Resolved process conflicts, network communication issues, and camera ownership conflicts during on-site bring-up.</li>
+          <li>Implemented cup/bottle visual following for the right arm; added RTT feedback and status diagnostics to assist real-hardware bring-up.</li>
+          <li>Resolved process conflicts, network communication issues, and camera ownership conflicts during on-site debugging.</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/fatfish-humanoid/">Details →</a></div>
     </div>
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">3D Perception Intern — Model Fine-tuning &amp; Distillation</span>
+        <span class="liy-exp-title">3D Perception — Model Fine-tuning &amp; Distillation <span class="liy-exp-type liy-type-intern">Internship</span></span>
         <span class="liy-exp-date">Apr 2025 – Aug 2025</span>
       </div>
       <div class="liy-exp-org">XiaoYu ZhiZao (Embodied AI startup)</div>
       <div class="liy-exp-body">
         <ul>
-          <li>Fine-tuned MAST3R with low-resolution ROPE and relative position encoding to accelerate inference while maintaining point cloud quality.</li>
-          <li>Designed a distillation loss and applied it to VGGT to speed up image-to-point-cloud inference for robot arm planning.</li>
+          <li>Fine-tuned MAST3R with low-resolution ROPE and relative position encoding to accelerate inference while maintaining point cloud quality for robot arm planning.</li>
+          <li>Designed a distillation loss and applied it to VGGT to speed up image-to-point-cloud inference.</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/3d-perception/">Details →</a></div>
     </div>
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">ViT-based Quadrotor End-to-End Obstacle Avoidance</span>
+        <span class="liy-exp-title">ViT-based Quadrotor End-to-End Obstacle Avoidance <span class="liy-exp-type liy-type-thesis">Thesis</span></span>
         <span class="liy-exp-date">Sep 2024 – May 2025</span>
       </div>
       <div class="liy-exp-org">Bachelor's Thesis &nbsp;·&nbsp; NUS Chongqing Research Institute</div>
       <div class="liy-exp-body">
         <ul>
           <li>Reproduced ViT / ViT-LSTM baselines from an ICRA 2025 paper; verified superior generalization of ViT in unseen forest environments.</li>
-          <li>Rebuilt the expert data pipeline in Flightmare, recording RGB frames, pose, and velocity commands; modified input from single-frame depth to RGB image sequences with an IMU fusion channel.</li>
-          <li>Achieved 73.26% obstacle avoidance success rate in forest simulation (Flightmare + Dodgelib), validated via closed-loop control on a local Ubuntu dual-boot setup.</li>
+          <li>Rebuilt the expert data pipeline in Flightmare, modified input from single-frame depth to RGB image sequences with an IMU fusion channel.</li>
+          <li>Achieved 73.26% obstacle avoidance success rate in forest simulation (Flightmare + Dodgelib).</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/vit-drone/">Details →</a></div>
     </div>
 
   </div>
@@ -349,32 +370,10 @@ order: 1
   </div>
 </div>
 
-<div class="liy-section">
-  <h2>Education</h2>
-  <div class="liy-edu-list">
-    <div class="liy-edu-item">
-      <div class="liy-edu-left">
-        <div class="liy-edu-school">National University of Singapore (QS #8)</div>
-        <div class="liy-edu-degree">M.Eng. Computer Engineering &nbsp;·&nbsp; GPA 4.7 / 5.0</div>
-        <div class="liy-edu-degree" style="opacity:0.6;">Robotics and Embodied AI (A+), Machine Learning with Applications (A)</div>
-      </div>
-      <div class="liy-edu-right">Aug 2025 – Dec 2026<br>Singapore</div>
-    </div>
-    <div class="liy-edu-item">
-      <div class="liy-edu-left">
-        <div class="liy-edu-school">Beijing Jiaotong University (211)</div>
-        <div class="liy-edu-degree">B.Eng. Computer Science &nbsp;·&nbsp; GPA 3.76 / 4.0</div>
-        <div class="liy-edu-degree" style="opacity:0.6;">First-Class Scholarship, Outstanding Graduate Thesis</div>
-      </div>
-      <div class="liy-edu-right">Sep 2021 – Jun 2025<br>Beijing, China</div>
-    </div>
-  </div>
-</div>
-
 </div><!-- /liy-en -->
 
 
-<!-- ════════════════════════ 中文 ════════════════════════ -->
+<!-- ════════════════════ 中文 ════════════════════ -->
 <div id="liy-zh" class="liy-hidden">
 
 <div class="liy-profile">
@@ -382,7 +381,7 @@ order: 1
   <div class="liy-profile-info">
     <h1>刘弈 <span class="liy-name-sub">Liu Yi</span></h1>
     <p class="liy-affil">计算机工程硕士 &nbsp;·&nbsp; 新加坡国立大学</p>
-    <span class="liy-seeking">🔍 正在寻找机器人方向科研实习机会</span>
+    <span class="liy-seeking">🔍 正在寻找机器人与 AI 方向科研实习机会</span>
     <div class="liy-contacts">
       <a class="liy-contact-link" href="mailto:e1538633@u.nus.edu">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -398,7 +397,7 @@ order: 1
 
 <div class="liy-section">
   <h2>关于我</h2>
-  <p>我目前是新加坡国立大学（NUS）计算机工程专业的硕士生，专注于机器人自主能力与智能系统研究。研究内容涵盖多传感器导航（热红外、LiDAR、4D 雷达）、SLAM、机器人控制的端到端学习，以及在 UGV 和人形机器人平台上的实机系统部署。</p>
+  <p>我目前是新加坡国立大学（NUS）计算机工程专业的硕士生，专注于机器人自主能力与智能系统研究。研究内容涵盖多传感器导航（热红外、LiDAR、4D 雷达）、SLAM、端到端机器人控制学习、3D 视觉感知，以及在 UGV 和人形机器人平台上的实机系统部署。</p>
   <p>我的兴趣在于将学习方法与真实机器人系统相结合，让系统能在真实硬件上稳定运行是我最有动力做的事。</p>
 </div>
 
@@ -407,9 +406,32 @@ order: 1
   <ul>
     <li>多传感器机器人导航——热红外、LiDAR、4D 毫米波雷达</li>
     <li>SLAM 与未知环境自主探索</li>
+    <li>3D 视觉感知与场景重建</li>
     <li>机器人感知与控制的端到端学习</li>
     <li>具身 AI 与人形机器人系统</li>
   </ul>
+</div>
+
+<div class="liy-section">
+  <h2>教育背景</h2>
+  <div class="liy-edu-list">
+    <div class="liy-edu-item">
+      <div>
+        <div class="liy-edu-school">新加坡国立大学（QS 第 8）</div>
+        <div class="liy-edu-degree">硕士 · 计算机工程 &nbsp;·&nbsp; GPA 4.7 / 5.0</div>
+        <div class="liy-edu-degree" style="opacity:0.6;">Robotics and Embodied AI (A+) &nbsp;·&nbsp; Machine Learning with Applications (A)</div>
+      </div>
+      <div class="liy-edu-right">2025.08 – 2026.12<br>新加坡</div>
+    </div>
+    <div class="liy-edu-item">
+      <div>
+        <div class="liy-edu-school">北京交通大学（211）</div>
+        <div class="liy-edu-degree">本科 · 计算机科学与技术 &nbsp;·&nbsp; GPA 3.76 / 4.0</div>
+        <div class="liy-edu-degree" style="opacity:0.6;">一等学习奖学金 &nbsp;·&nbsp; 校级优秀毕业设计</div>
+      </div>
+      <div class="liy-edu-right">2021.09 – 2025.06<br>北京</div>
+    </div>
+  </div>
 </div>
 
 <div class="liy-section">
@@ -446,7 +468,7 @@ order: 1
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">多传感器机器人导航与定位研究</span>
+        <span class="liy-exp-title">多传感器机器人导航与定位研究 <span class="liy-exp-type liy-type-research">科研</span></span>
         <span class="liy-exp-date">2025.08 – 2025.12</span>
       </div>
       <div class="liy-exp-org">机器人导航研究项目 &nbsp;·&nbsp; 新加坡国立大学</div>
@@ -457,11 +479,12 @@ order: 1
           <li>将 RPM-Net（scan-to-scan 软对应）与 Radar-Transformer（scan-to-submap 硬对应）接入雷达惯性里程计后端（IEKF / VGICP），在 ColoRadar 与 SNAIL 数据集上完成评测。</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/multi-sensor-nav/">详情 →</a></div>
     </div>
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">基于 DRL 的室内自主探索导航系统重构</span>
+        <span class="liy-exp-title">基于 DRL 的室内自主探索导航系统重构 <span class="liy-exp-type liy-type-research">科研</span></span>
         <span class="liy-exp-date">2025.12 – 至今</span>
       </div>
       <div class="liy-exp-org">机器人导航研究项目 &nbsp;·&nbsp; 新加坡国立大学</div>
@@ -469,17 +492,18 @@ order: 1
         <ul>
           <li>分析 TARE 规划器在窄走廊、路口场景下的 goal=NaN 与 frontier utility 失效问题，梳理 3D 点云 SLAM 到 2D 占用栅格的感知-规划接口。</li>
           <li>采用"最小替换"策略将 ARiADNE（DRL 自主探索器）接入现有 ROS2 导航链路，打通 Livox/Hesai SLAM、OctoMap/OccupancyGrid 与 waypoint 接口，保留下游 local planner。</li>
-          <li>在 Unity 与 Gazebo 中建立 smoke test 与实验编排流程；预训练 checkpoint 在 5 个测试 episode 上均完成探索，验证了训练仓与 ROS2 推理仓的权重兼容性。</li>
+          <li>在 Unity 与 Gazebo 中建立 smoke test 流程；预训练 checkpoint 在 5 个测试 episode 上均完成探索，验证了训练仓与 ROS2 推理仓的权重兼容性。</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/drl-exploration/">详情 →</a></div>
     </div>
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">人形机器人感知与控制联调</span>
+        <span class="liy-exp-title">人形机器人感知与控制联调 <span class="liy-exp-type liy-type-intern">实习</span></span>
         <span class="liy-exp-date">2026.02 – 2026.03</span>
       </div>
-      <div class="liy-exp-org">Fatfish AI &nbsp;·&nbsp; 机器人实习生</div>
+      <div class="liy-exp-org">Fatfish AI</div>
       <div class="liy-exp-body">
         <ul>
           <li>在 Fourier N1 平台上打通机器人本机 RGB-D 采集、Orin 远程视觉推理与本机上肢控制链路。</li>
@@ -487,25 +511,27 @@ order: 1
           <li>处理控制进程冲突、网络通信与相机归属等系统问题，支持实机 bring-up 调试。</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/fatfish-humanoid/">详情 →</a></div>
     </div>
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">3D 感知实习——端到端重建模型微调与蒸馏</span>
+        <span class="liy-exp-title">3D 感知——端到端重建模型微调与蒸馏 <span class="liy-exp-type liy-type-intern">实习</span></span>
         <span class="liy-exp-date">2025.04 – 2025.08</span>
       </div>
       <div class="liy-exp-org">小雨智造（具身智能初创公司）</div>
       <div class="liy-exp-body">
         <ul>
-          <li>对 MAST3R 进行低分辨率 ROPE 微调和相对位置编码微调，在保持点云质量的同时加速推理。</li>
-          <li>设计蒸馏 loss，对 VGGT 进行蒸馏，提升机械臂规划场景下的图像到点云推理速度。</li>
+          <li>对 MAST3R 进行低分辨率 ROPE 微调和相对位置编码微调，在保持点云质量的同时加速推理，用于机械臂规划场景。</li>
+          <li>设计蒸馏 loss，对 VGGT 进行蒸馏，提升图像到点云的推理速度。</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/3d-perception/">详情 →</a></div>
     </div>
 
     <div class="liy-exp-item">
       <div class="liy-exp-header">
-        <span class="liy-exp-title">基于 ViT 的四旋翼无人机端到端避障系统</span>
+        <span class="liy-exp-title">基于 ViT 的四旋翼无人机端到端避障系统 <span class="liy-exp-type liy-type-thesis">毕设</span></span>
         <span class="liy-exp-date">2024.09 – 2025.05</span>
       </div>
       <div class="liy-exp-org">本科毕业设计 &nbsp;·&nbsp; 新加坡国立大学重庆研究院</div>
@@ -513,9 +539,10 @@ order: 1
         <ul>
           <li>复现 ICRA 2025 论文中的 ViT / ViT-LSTM 基线，验证 ViT 在陌生仿真环境中更优的泛化性。</li>
           <li>基于 Flightmare 重构专家数据采集流程，将输入从单帧深度图改为 RGB 图像序列并引入 IMU 融合通道。</li>
-          <li>在树林仿真环境（Flightmare + Dodgelib）中实现 73.26% 避障成功率，并通过本地 Ubuntu 双系统完成闭环控制验证。</li>
+          <li>在树林仿真环境（Flightmare + Dodgelib）中实现 73.26% 避障成功率。</li>
         </ul>
       </div>
+      <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/vit-drone/">详情 →</a></div>
     </div>
 
   </div>
@@ -528,28 +555,6 @@ order: 1
     <div style="margin-top:0.3rem;">
       <strong>Deep Radar Point Matching for 4D Radar-Inertial Odometry</strong><br>
       <span style="opacity:0.75;">将 RPM-Net（scan-to-scan 软对应）与 Radar-Transformer（scan-to-submap 硬对应）接入 IEKF/VGICP 雷达惯性里程计，在 ColoRadar 与 SNAIL 数据集上完成评测。</span>
-    </div>
-  </div>
-</div>
-
-<div class="liy-section">
-  <h2>教育背景</h2>
-  <div class="liy-edu-list">
-    <div class="liy-edu-item">
-      <div class="liy-edu-left">
-        <div class="liy-edu-school">新加坡国立大学（QS 第 8）</div>
-        <div class="liy-edu-degree">硕士 · 计算机工程 &nbsp;·&nbsp; GPA 4.7 / 5.0</div>
-        <div class="liy-edu-degree" style="opacity:0.6;">Robotics and Embodied AI (A+) &nbsp;·&nbsp; Machine Learning with Applications (A)</div>
-      </div>
-      <div class="liy-edu-right">2025.08 – 2026.12<br>新加坡</div>
-    </div>
-    <div class="liy-edu-item">
-      <div class="liy-edu-left">
-        <div class="liy-edu-school">北京交通大学（211）</div>
-        <div class="liy-edu-degree">本科 · 计算机科学与技术 &nbsp;·&nbsp; GPA 3.76 / 4.0</div>
-        <div class="liy-edu-degree" style="opacity:0.6;">一等学习奖学金 &nbsp;·&nbsp; 校级优秀毕业设计</div>
-      </div>
-      <div class="liy-edu-right">2021.09 – 2025.06<br>北京</div>
     </div>
   </div>
 </div>
@@ -576,9 +581,6 @@ function liySetLang(lang) {
   try { localStorage.setItem('liy-lang', lang); } catch(e) {}
 }
 (function() {
-  try {
-    var saved = localStorage.getItem('liy-lang');
-    if (saved === 'zh') liySetLang('zh');
-  } catch(e) {}
+  try { var s = localStorage.getItem('liy-lang'); if (s === 'zh') liySetLang('zh'); } catch(e) {}
 })();
 </script>
