@@ -13,6 +13,8 @@ permalink: /projects/fatfish-humanoid/
 .liy-lang-btn.active{background:var(--link-color,#3584e4);color:#fff}
 .liy-wip{margin:0 0 1.5rem;padding:.55rem .9rem;background:#fff8e1;border-left:3px solid #f0a500;border-radius:0 6px 6px 0;font-size:.86rem}
 [data-mode="dark"] .liy-wip{background:#2d2200}
+.liy-contrib-box{margin-top:1.5rem;padding:.8rem 1.1rem;border:1.5px solid var(--link-color,#3584e4);border-radius:8px;}
+.liy-contrib-box h3{margin-top:0;}
 .liy-hidden{display:none!important}
 </style>
 
@@ -27,7 +29,7 @@ permalink: /projects/fatfish-humanoid/
 <!-- ── English ── -->
 <div id="liy-en">
 
-<div class="liy-wip">📝 Detailed writeup coming soon — key information is shown below.</div>
+<div class="liy-wip">📝 More details will be added here — content below is a working draft.</div>
 
 ## Humanoid Robot Perception & Control Integration
 
@@ -35,40 +37,52 @@ permalink: /projects/fatfish-humanoid/
 
 **Platform:** Fourier N1 humanoid robot · NVIDIA AGX Orin (remote) · ROS2
 
-**Tech stack:** Python · ROS2 · YOLO · RGB-D · WebSocket · rosbag · RTAB-Map
+**Tech stack:** Python · ROS2 · YOLO · RGB-D · SLAM · WebSocket · Web UI · rosbag
 
 ---
 
-### Overview
+### Project Overview
 
-Worked on the Fourier N1 humanoid robot platform, building a perception-to-control pipeline that connects on-robot RGB-D sensing, remote visual inference on an Orin compute node, and local upper-limb control. The key constraint: the N1 robot has limited onboard compute, so heavy vision inference runs remotely on an Orin unit and results are streamed back over the network.
+The project built a visual-following system on the Fourier N1 humanoid robot platform. The core pipeline runs object detection on a remote Orin compute unit and sends results back to the robot for arm control — a design driven by the N1's limited onboard compute. The system enables the robot to detect a target object, estimate its 3D position, and track it with the right arm.
 
-### Pipeline Bring-up
-
-- Connected N1's on-robot RGB-D camera, remote YOLO-based visual inference on Orin, and local arm joint control into an end-to-end pipeline
-- Resolved camera ownership conflicts between multiple processes, process scheduling issues, and network communication latency
-- Managed rosbag recording for data collection and RTAB-Map for offline mapping sessions
-
-### Visual Following
-
-- Implemented cup/bottle visual following: detect target object → estimate 3D centroid from depth → command right arm to follow / approach
-- Added RTT (round-trip time) monitoring and system status diagnostics to the control UI to assist real-hardware debugging
-
-### On-site Debugging
-
-- Diagnosed and fixed inter-process conflicts arising during live bring-up
-- Handled network configuration, camera device assignment, and ROS topic remapping issues across the N1-to-Orin link
+*The algorithm design of the visual following pipeline was led by the team; my involvement focused on system integration, UI, and on-site engineering work described below.*
 
 ---
 
-*System architecture diagram and demo footage will be added here.*
+<div class="liy-contrib-box">
+
+### My Contributions
+
+**Algorithm understanding & system integration**
+- Studied and documented the visual-following algorithm architecture: RGB-D capture → YOLO detection → 3D centroid estimation → arm joint command
+- Integrated components across the N1-to-Orin communication link, understanding how each module interacts
+
+**Web UI & frontend–backend connection**
+- Developed the web-based control and monitoring UI
+- Connected the frontend status display to the backend control system
+- Added RTT (round-trip time) monitoring so latency between Orin inference and robot control was visible during debugging
+
+**SLAM & environment mapping**
+- Used SLAM (RTAB-Map) for offline environment mapping during bring-up sessions
+- Managed rosbag recording for data collection
+
+**On-site debugging**
+- Resolved camera device ownership conflicts between multiple processes
+- Fixed network routing and ROS topic remapping issues across the N1–Orin link
+- Diagnosed and cleared process scheduling conflicts during live bring-up
+
+</div>
+
+---
+
+*System architecture diagram, UI screenshots, and demo footage will be added here.*
 
 </div>
 
 <!-- ── 中文 ── -->
 <div id="liy-zh" class="liy-hidden">
 
-<div class="liy-wip">📝 详细内容即将补充，以下为主要信息。</div>
+<div class="liy-wip">📝 详细内容将陆续补充，以下为草稿版本。</div>
 
 ## 人形机器人感知与控制联调
 
@@ -76,33 +90,45 @@ Worked on the Fourier N1 humanoid robot platform, building a perception-to-contr
 
 **平台：** Fourier N1 人形机器人 · NVIDIA AGX Orin（远端） · ROS2
 
-**技术栈：** Python · ROS2 · YOLO · RGB-D · WebSocket · rosbag · RTAB-Map
+**技术栈：** Python · ROS2 · YOLO · RGB-D · SLAM · WebSocket · Web UI · rosbag
 
 ---
 
-### 项目概述
+### 项目内容
 
-在 Fourier N1 人形机器人平台上，构建从机器人本机 RGB-D 感知到远端 Orin 视觉推理、再到本机上肢关节控制的完整感知-控制链路。关键约束：N1 本机算力有限，重型视觉推理在远端 Orin 上运行，结果通过网络实时回传。
+本项目在 Fourier N1 人形机器人平台上构建视觉跟随系统。核心链路将目标检测运行在远端 Orin 算力节点上，推理结果传回机器人用于手臂控制——这一设计由 N1 本机算力有限决定。系统实现了机器人检测目标物体、估计其 3D 位置并以右臂进行跟随。
 
-### 链路 Bring-up
-
-- 打通 N1 本机 RGB-D 相机采集、Orin 远端 YOLO 视觉推理与本机上肢控制端到端链路
-- 处理多进程间的相机归属冲突、进程调度问题与网络通信延迟
-- 管理 rosbag 数据采集与 RTAB-Map 离线建图
-
-### 视觉跟随
-
-- 实现 cup/bottle 视觉跟随：目标检测 → 基于深度的 3D 中心估计 → 右臂跟随/接近
-- 在控制 UI 中增加 RTT（往返时间）监控与系统状态诊断，辅助实机调试
-
-### 现场联调
-
-- 诊断并修复现场 bring-up 时的进程冲突问题
-- 处理 N1 到 Orin 链路的网络配置、相机设备归属与 ROS topic 重映射问题
+*视觉跟随算法的设计由团队主导；我的参与主要集中在系统集成、UI 开发与现场工程工作，详见下方。*
 
 ---
 
-*系统架构图与 Demo 视频将在后续补充。*
+<div class="liy-contrib-box">
+
+### 我的工作
+
+**算法理解与系统集成**
+- 学习并梳理视觉跟随算法架构：RGB-D 采集 → YOLO 检测 → 3D 中心估计 → 手臂关节指令
+- 在 N1 到 Orin 的通信链路中集成各模块，理解各组件间的交互方式
+
+**Web UI 与前后端连接**
+- 开发基于 Web 的控制与监控 UI 界面
+- 打通前端状态展示与后端控制系统的连接
+- 增加 RTT（往返时间）监控，使调试时 Orin 推理与机器人控制之间的延迟可视化
+
+**SLAM 与环境建图**
+- 使用 SLAM（RTAB-Map）进行现场 bring-up 阶段的离线环境建图
+- 管理 rosbag 数据录制
+
+**现场联调**
+- 解决多进程间的相机设备归属冲突
+- 修复 N1–Orin 链路上的网络路由与 ROS topic 重映射问题
+- 诊断并处理现场 bring-up 过程中的进程调度冲突
+
+</div>
+
+---
+
+*系统架构图、UI 截图与 Demo 视频将在后续补充。*
 
 </div>
 

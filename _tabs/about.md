@@ -317,9 +317,9 @@ order: 1
       <div class="liy-exp-org">Fatfish AI</div>
       <div class="liy-exp-body">
         <ul>
-          <li>On the Fourier N1 platform: connected on-robot RGB-D capture, remote visual inference on Orin, and local arm control into a unified pipeline.</li>
-          <li>Implemented cup/bottle visual following for the right arm; added RTT feedback and status diagnostics to assist real-hardware bring-up.</li>
-          <li>Resolved process conflicts, network communication issues, and camera ownership conflicts during on-site debugging.</li>
+          <li>Participated in a project building the Fourier N1 visual-following pipeline (RGB-D → remote Orin inference → arm control); studied and documented the algorithm architecture and inference logic.</li>
+          <li>Developed the web UI and connected the frontend status display to the backend control system; added RTT monitoring and system diagnostics to support on-site bring-up.</li>
+          <li>Used SLAM for environment mapping; resolved camera ownership, network routing, and process scheduling conflicts during live debugging sessions.</li>
         </ul>
       </div>
       <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/fatfish-humanoid/">Details →</a></div>
@@ -506,9 +506,9 @@ order: 1
       <div class="liy-exp-org">Fatfish AI</div>
       <div class="liy-exp-body">
         <ul>
-          <li>在 Fourier N1 平台上打通机器人本机 RGB-D 采集、Orin 远程视觉推理与本机上肢控制链路。</li>
-          <li>实现 cup-follow / bottle-follow 目标的右臂视觉跟随，增加 RTT 反馈与状态诊断模块，用于现场联调。</li>
-          <li>处理控制进程冲突、网络通信与相机归属等系统问题，支持实机 bring-up 调试。</li>
+          <li>参与 Fourier N1 视觉跟随系统的开发（RGB-D → Orin 远程推理 → 手臂控制），理解并梳理视觉跟随算法的架构与推理逻辑。</li>
+          <li>负责 Web UI 开发，打通前端状态展示与后端控制系统的连接；增加 RTT 监控与状态诊断模块，用于现场联调。</li>
+          <li>使用 SLAM 进行环境建图；处理相机归属、网络配置与进程调度等现场调试问题。</li>
         </ul>
       </div>
       <div class="liy-exp-footer"><a class="liy-exp-more" href="/projects/fatfish-humanoid/">详情 →</a></div>
