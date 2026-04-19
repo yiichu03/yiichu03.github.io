@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import shutil
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -16,6 +17,46 @@ OUTPUT_DIR = REPO_DIR / "_literature_notes"
 ASSET_DIR = REPO_DIR / "assets" / "literature"
 
 WIKILINK_RE = re.compile(r"(!)?\[\[([^\]]+)\]\]")
+FRONT_MATTER_DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S %z"
+
+
+def format_front_matter_datetime(value: datetime) -> str:
+    return value.astimezone(timezone.utc).strftime(FRONT_MATTER_DATETIME_FORMAT)
+
+
+def parse_datetime(value: str) -> datetime | None:
+    text = value.strip()
+    if not text:
+        return None
+
+    for date_format in (
+        FRONT_MATTER_DATETIME_FORMAT,
+        "%Y-%m-%dT%H:%M:%S%z",
+        "%Y-%m-%dT%H:%M:%S.%f%z",
+    ):
+        try:
+            return datetime.strptime(text, date_format)
+        except ValueError:
+            continue
+
+    try:
+        return datetime.fromisoformat(text)
+    except ValueError:
+        return None
+
+
+def format_display_date(value: str) -> str:
+    parsed = parse_datetime(value)
+    if parsed is None:
+        return value
+    return parsed.astimezone(timezone.utc).strftime("%Y-%m-%d")
+
+
+def format_display_datetime(value: str) -> str:
+    parsed = parse_datetime(value)
+    if parsed is None:
+        return value
+    return parsed.astimezone(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
 
 
 def slugify(value: str) -> str:
@@ -179,6 +220,44 @@ def build_note_index(note_paths: list[Path]) -> dict[str, str]:
     return index
 
 
+def load_existing_output_metadata() -> dict[str, dict[str, object]]:
+    metadata_by_source_path: dict[str, dict[str, object]] = {}
+    if not OUTPUT_DIR.exists():
+        return metadata_by_source_path
+
+    for path in OUTPUT_DIR.glob("*.md"):
+        if not path.is_file() or path.name == ".gitkeep":
+            continue
+        metadata, _ = split_front_matter(path.read_text(encoding="utf-8"))
+        source_path = str(metadata.get("source_path", "")).strip()
+        if source_path:
+            metadata_by_source_path[source_path] = metadata
+
+    return metadata_by_source_path
+
+
+def git_first_added_at(path: Path) -> str | None:
+    rel_path = path.relative_to(REPO_DIR).as_posix()
+    result = subprocess.run(
+        ["git", "log", "--diff-filter=A", "--format=%aI", "--", rel_path],
+        cwd=REPO_DIR,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        return None
+
+    lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+    if not lines:
+        return None
+
+    parsed = parse_datetime(lines[-1])
+    if parsed is None:
+        return None
+    return format_front_matter_datetime(parsed)
+
+
 def render_links(text: str, note_path: Path, note_index: dict[str, str], copied_assets: dict[Path, str]) -> str:
     def replace(match: re.Match[str]) -> str:
         is_embed = bool(match.group(1))
@@ -210,7 +289,7 @@ def sync() -> int:
     if not SOURCE_DIR.exists():
         raise SystemExit(f"Source directory not found: {SOURCE_DIR}")
 
-    all_note_paths = sorted(SOURCE_DIR.rglob("*.md"))
+    all_note_paths = sorted(path for path in SOURCE_DIR.glob("*.md") if path.is_file())
 
     published_note_paths: list[Path] = []
     parsed_sources: dict[Path, tuple[dict[str, object], str]] = {}
@@ -222,6 +301,8 @@ def sync() -> int:
             published_note_paths.append(note_path)
 
     note_index = build_note_index(published_note_paths)
+    existing_output_metadata = load_existing_output_metadata()
+    synced_at = format_front_matter_datetime(datetime.now(timezone.utc))
 
     shutil.rmtree(OUTPUT_DIR, ignore_errors=True)
     shutil.rmtree(ASSET_DIR, ignore_errors=True)
@@ -240,18 +321,28 @@ def sync() -> int:
 
         rel = note_path.relative_to(SOURCE_DIR).with_suffix("")
         slug = slugify(rel.as_posix())
-        updated_at = datetime.fromtimestamp(note_path.stat().st_mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S %z")
         source_path = note_path.relative_to(VAULT_DIR).as_posix()
         output_path = OUTPUT_DIR / f"{slug}.md"
+        updated_at = format_front_matter_datetime(datetime.fromtimestamp(note_path.stat().st_mtime, tz=timezone.utc))
+        published_at = str(existing_output_metadata.get(source_path, {}).get("published_at", "")).strip()
+        if not published_at:
+            published_at = git_first_added_at(output_path) or synced_at
+
+        metadata_block = (
+            f"> Published: {format_display_date(published_at)}\n"
+            f"> Updated: {format_display_datetime(updated_at)}\n\n"
+        )
 
         output_path.write_text(
             "---\n"
             f'title: "{escape_yaml(title)}"\n'
             f'slug: "{escape_yaml(slug)}"\n'
+            f'date: {published_at}\n'
+            f'published_at: {published_at}\n'
             f'updated_at: {updated_at}\n'
             f'source_path: "{escape_yaml(source_path)}"\n'
             "---\n\n"
-            f"{body}",
+            f"{metadata_block}{body}",
             encoding="utf-8",
         )
 
