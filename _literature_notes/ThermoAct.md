@@ -3,25 +3,25 @@ title: "ThermoAct: Thermal-Aware Vision-Language-Action Models  for Robotic Perc
 slug: "ThermoAct"
 date: 2026-04-18 14:37:44 +0000
 published_at: 2026-04-18 14:37:44 +0000
-updated_at: 2026-04-18 14:36:00 +0000
+updated_at: 2026-04-19 15:49:52 +0000
 source_path: "10 Literature Notes/ThermoAct.md"
 ---
 
 > Published: 2026-04-18
-> Updated: 2026-04-18 14:36 UTC
+> Updated: 2026-04-19 15:49 UTC
 
 ## Citation
 
-- Authors:
-- Year:
-- Venue:
-- Citekey:
+- Authors: Young-Chae Son, Dae-Kwan Ko, Yoon-Ji Choi, Soo-Chul Lim
+- Year: 2026
+- Venue: arXiv preprint（RAL 2026）
+- Citekey: Son2026ThermoAct
 
 ## Reading Context
 
-- Why I read this paper:
-- Reading goal: quick scan / focused understanding / reproduction / related work
-- My current stage: unread / skimming / deep reading / revisiting
+- Why I read this paper: 想看看别人是怎么把thermal用到具身智能任务里的，是利用了thermal的哪些优势，是怎么处理它的劣势的。
+- Reading goal: related work / focused understanding
+- My current stage: skimming
 
 ## Part A — AI-generated scaffold
 
@@ -29,21 +29,24 @@ source_path: "10 Literature Notes/ThermoAct.md"
 
 ### AI Summary
 
-- Problem:
-- Core idea:
-- Method:
-- Main result:
-- One-sentence takeaway:
+- Problem: 现有很多 VLA 主要依赖 RGB vision，能识别物体类别，但通常无法感知 **temperature** 这种物理属性，因此很难完成“pick the coldest coke”“turn off a hot hair straightener”这类依赖热信息的任务。
+- Core idea: 提出 **ThermoAct**，把 **thermal image** 接入 VLA，同时引入 **VLM Planner + VLA Executor** 的 hierarchical framework，让 VLM 负责 high-level planning / sub-task decomposition，VLA 负责 low-level control。
+- Method: 使用 **Gemini 2.0 Flash** 作为 **VLM Planner**，根据用户指令、thermal image 和 wrist RGB image 生成 sub-task plan；使用基于 **π0** 的 **VLA Executor**，输入 thermal image、wrist RGB、robot state 和当前 sub-task prompt，输出 joint actions、gripper control 和 done flag。
+- Main result: 在 5 个 real-world tasks 上，作者的方法 **RGB-T** 的 overall average success rate 为 **76.8 ± 4.6**，高于 **RGB-RGB baseline** 的 **59.4 ± 17.1**；在 thermal-related subtasks 上平均成功率约 **82%**，相比 RGB-RGB 的 **42%** 提升明显。
+- One-sentence takeaway: 这篇论文说明，**thermal-aware hierarchical VLA** 能让机器人在小数据条件下更好地完成与温度相关的 manipulation 和 safety tasks，但其空间感知仍受限，不能替代 depth/perception。
 
 ### Abstract-style reading note
 
-- Paper goal:
-- Core challenge:
-- Authors' claim:
+- Paper goal: 将 **thermal information** 系统性地引入 **Vision-Language-Action** 框架，使机器人能够执行依赖温度感知的任务，并在安全相关场景中做出更合理的决策。
+- Core challenge: 一方面，thermal 属性不是普通 RGB image 能直接表达的；另一方面，相关大规模 pretraining dataset 很少，直接训练 end-to-end flat VLA 去学复杂 long-horizon reasoning 成本高且不稳定。
+- Authors' claim: 通过 **hierarchical architecture** 把 high-level reasoning 交给 VLM、把 low-level execution 交给 VLA，可以在有限 thermal data 条件下实现更稳定、更安全的机器人行为。 ^pnbjn7
+
 
 ### Method
 
 - Inputs / observations:
+- 对 **VLM Planner**：user task、thermal image、wrist RGB image、guideline prompt
+- 对 **VLA Executor**：thermal image（external camera）、wrist RGB image、7-dim robot state、sub-task language prompt
 - Outputs / targets:
 - Main modules:
 - Training objective:
