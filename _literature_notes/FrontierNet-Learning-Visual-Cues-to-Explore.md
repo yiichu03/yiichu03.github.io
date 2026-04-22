@@ -3,12 +3,12 @@ title: "FrontierNet: Learning Visual Cues to Explore"
 slug: "FrontierNet-Learning-Visual-Cues-to-Explore"
 date: 2026-04-09 14:40:42 +0000
 published_at: 2026-04-09 14:40:42 +0000
-updated_at: 2026-04-10 06:51:34 +0000
+updated_at: 2026-04-20 12:04:08 +0000
 source_path: "10 Literature Notes/FrontierNet Learning Visual Cues to Explore.md"
 ---
 
 > Published: 2026-04-09
-> Updated: 2026-04-10 06:51 UTC
+> Updated: 2026-04-20 12:04 UTC
 
 ## Citation
 
@@ -170,6 +170,118 @@ source_path: "10 Literature Notes/FrontierNet Learning Visual Cues to Explore.md
 1. GPT说**FrontierNet**主张**不在 3D 稠密地图上提 frontier proposal，而是直接从 posed RGB 图像提出 frontier pixels 并预测 info gain**，然后再把这些 2D frontier 锚定到 3D 并用于规划。
 我想知道这里说的==“锚定”==具体是什么过程？怎么做到的？
 
+==摘要==
+#### 1. posed RGB images里面的相机位姿是从哪里来的呢？
+如SLAM/VIO提供位姿估计（机器人本体的or某个传感器的），然后结合相机相对于机器人机体/某传感器的外参，得到真正的相机位姿
+==[[2026-04-20#^t8mtka]]==
+#### 2. achieve a 15% improvement in a early-stage exploration efficiency，强调了是early-stage，所以是不是完整阶段来看的时候，效率并没有提升呢？还是有其他含义？这个应该是要看实验部分？
+GPT： 不是。**强调 early-stage，不等于后期没提升。**  
+从实验结果看，作者的方法在完整比较里并不只是早期更强，而是**在 Vox@25、Vox@50、Vox@100 以及 success rate 上整体都更好**；作者自己在结果部分也明确写了：在 10 个场景上，使用 simulator depth 时，他们的方法在 25%、50%、100% steps 处都取得了最高 overall efficiency 和最高 success rate。==那为什么摘要还专门强调 early-stage？原因更像是：==**（我的理解是，把效果好进行归因分析的一种分析/写作手法？）**
+- 这篇论文的关键创新之一，是**预测 info gain 并优先选更“值钱”的 frontier**；
+- 这种能力最容易在**探索前期**体现出来，因为前几步选得好不好，会明显影响后面覆盖速度；
+- 结果里作者特别指出：在 **Vox@50** 上，他们比第二名整体高大约 **15%**，并把这解释为系统能够在 early exploration 阶段更有效地优先访问高 info-gain 区域。
+你可以这样理解：
+- **摘要里的“15% improvement”主要对应的是中早期阶段的优势表达**；
+- **但不是说最终阶段没有提升**。实际上 Table I 里他们在 Vox@100 的 mean 也是最高：
+    - Ours（sim depth）= **71.5**
+    - NBVP = **67.0**
+    - Classic = **53.6**
+    - SEER = **51.8 / 55.1**（原版 / 重实现）  
+        所以完整阶段也还是更强。
+所以这句话更准确的读法是：
+**作者最想突出的是“前期决策质量提升非常明显”，不是“只有前期提升”。**
+#### 3. 引言里面说了现有exploration方法可以分为两大类：一是frontier-based：从 map boundary 里直接找 frontier, 二是**sampling-based / NBV-like**：在地图里采样 viewpoint 或 path，再评估哪一个更好。==所以这两类方法的区别到底是什么？==
+GPT：
+这是个非常核心的问题。你可以先记最短版本：
+- **frontier-based**：先找“已知自由区域”和“未知区域”的边界，再围绕这些边界选目标。
+- **sampling-based / NBV-like**：不先限定必须是 frontier 边界，而是在地图里采样 candidate viewpoints / paths，再根据某种指标评估哪个最好。
+更细一点说：
+> [!A. frontier-based 方法]
+这类方法的出发点是：
+**未知空间最有可能从 frontier 附近被看到。**
+所以流程通常是：
+1. 先有一个 occupancy map / voxel map；
+2. 在 map 里找 frontier，也就是 known-free 和 unknown 的边界；
+3. 再从这些 frontier 里挑下一个要去的目标。
+它的特点是：
+- 候选点来源比较明确；
+- 搜索空间相对小；
+- 通常比较直接、计算也可能更省；
+- 但很依赖 frontier 提取得准不准，也强依赖地图边界质量。
+> [!B. sampling-based / NBV-like 方法]
+这类方法的思路是：
+**先提出很多候选 viewpoint / path，再评估哪一个信息收益最高。**
+所以流程通常是：
+1. 在当前 map 中采样一些 viewpoint 或 path；
+2. 对每个 candidate 计算一个评价分数，比如 map entropy、uncertainty、information gain；
+3. 选分数最高的 next-best-view / next-best-path。
+它的特点是：
+- 候选不局限于 frontier 边界本身；
+- flexibility 更高；
+- 可以直接把“信息收益”“不确定性”“路径代价”等统一进评分里；
+- ==但一般采样和评估开销更大。==
+==我的疑问：所以 sampling based / nbv like 方法它是怎么选点的呢？？？ 是用均匀采样这种吗？==
+C. 这两类方法的本质差别
+你可以把差别总结成一句：
+**frontier-based 是“先找边界，再选目标”；sampling-based 是“先撒候选，再算哪个目标最好”。**
+或者更学术一点：
+- frontier-based 的 candidate generation 是 **boundary-driven**
+- sampling-based 的 candidate generation 是 **proposal/evaluation-driven**
+论文 introduction 里那句
+> one derives poses from the 3D map by calculating optimal poses directly, the other samples poses and evaluates them against the map  
+> 其实就是在讲这个差别。前者是**从 map 边界直接导出 pose**，后者是**采样 pose 再回到 map 上打分**。
+
+D. 这篇论文为什么会抓住这个差别？
+因为作者认为：虽然 frontier-based 和 sampling-based 看起来不一样，**但两者有一个共同点——都高度依赖 3D map 来指导 exploration**。
+所以 FrontierNet 想改的不是“只打败 frontier-based”，而是更上层地挑战这个共性：
+**goal proposal 这一步，能不能不从 dense 3D map 出发，而是直接从视觉里学？**
+
+#### 4. Unlike existing methods, it avoids operations on dense 3D maps at the proposal stage, which are sensitive to map quality, and often discard rich appearance information. 什么是proposal阶段？
+这里的 **proposal stage**，你可以先直接理解成：
+**“提出候选探索目标”的阶段**，也就是系统先决定  
+**哪些 frontier / 哪些 candidate poses 值得后续考虑**。
+放到这篇论文里具体是什么意思
+这篇论文的系统大致可以拆成：
+1. **proposal**：先从输入里提出 frontier candidates，并估计它们的 info gain
+2. **3D anchoring**：把 2D 结果变成 sparse 3D frontiers
+3. **planning**：再从这些候选里选 next best goal，并规划路径去那里
+所以这里的 **proposal stage** 不是“真正去走路径”的阶段，  
+而是更前面的：
+**先找出“可以去哪里”和“哪里更值得去”** 的阶段。
+==[[2026-04-20#^9bt9ty]]==
+为什么作者要特别说这个阶段？
+因为传统方法通常在这个阶段会做很多 **dense 3D map operations**，比如：
+- 在 occupancy map / voxel map 里找 frontier boundary
+- 在 3D map 里采样 viewpoints
+- 根据 3D map 计算 candidate 的信息收益
+
+而作者说他们的方法在 **proposal stage** 避免了这种 dense 3D map 上的操作，转而直接从图像里预测：
+- frontier 在哪里
+- 它的 info gain 大概多大
+结合 Fig. 3 来理解
+Fig. 3 里其实已经把流程画出来了：
+- posed RGB image
+- depth prediction
+- **FrontierNet predicts 2D frontier regions and info gain**
+- transform into sparse 3D frontiers
+- planning module selects next goal and plans path
+所以在这张图里：
+**FrontierNet 输出 2D frontier regions + info gain 的这部分，就是 proposal stage 的核心。**
+后面的 tracking、next-best-goal selection、path planning，就已经不属于 proposal 本身了。
+
+#### 5. 如何制作数据集用于训练？？如何有ground truth，它再method里面说会在III-D里面讲解
+---
+#### 6. Fig. 4: Ground Truth Generation. For a sampled camera pose in the voxelized scene, 3D frontier voxels are calculated and projected onto the camera frame using ground truth 3D occupancy grid. Merging the projection with the depth discontinuity mask produces a refined and less noisy frontier pixels mask F, which is used to calculate the distance field map D. Additionally, projecting the info gain of each frontier voxel onto the camera frame generates the info gain map G.
+==我不是很理解，如果ground truth是通过3D信息去打标签的话，那么也没有利用到前面作者一直说的图片的appearance 信息阿？？？==(我的意思是，ground truth是去引导模型学习的对吗？如果ground truth是基于几何信息得到的，那么它如何有效引导模型去利用图片的appearance信息呢？我的意思是，比如图片的appearance提供的信息应该是除了几何还有语义信息，但是现在的实验设计是偏向于让模型从图片里面可以得到和3D信息提供的类似的输出，类似于去锻炼了模型的模仿传统方法的潜力？但是并没有充分针对或者利用图片的信息？我不知道我有没有表达清楚)
+chatGPT的回答
+> [!关于这篇论文里 appearance information 的一个当前理解]
+> 我目前的理解是，这篇论文虽然一直强调 visual cues / appearance information，但它在训练时使用的 ground truth 其实仍然主要是由 **3D 几何信息**定义出来的：frontier 来自 3D occupancy / frontier voxel 的投影，info gain 也来自额外可观测体积这一几何量的估计。也就是说，作者先用完整 3D 场景生成监督信号，再让模型从图像中学习去预测这些标签。
+> 所以我现在更倾向于把这篇论文理解为：**它是在学习如何从视觉输入中预测一个由几何定义出来的 frontier / info gain 目标**。从这个角度看，appearance information 的作用更像是帮助模型完成 prediction，而不是直接参与定义 exploration objective 本身。换句话说，这篇论文证明的更像是：**图像中的 appearance cues 可以帮助预测 geometry-defined frontier 和 info gain**。
+> 这也让我产生一个阅读上的提醒：论文里提到“利用 appearance information”，更准确地理解，可能不是说它建立了一个“由 appearance 原生定义”的探索目标，而是说它让模型有机会从 RGB 中学习那些对 frontier / gain prediction 有帮助的线索。这样理解的话，这篇论文的重点更像是 **visual prediction of geometry-defined targets**，而不是完全跳出传统几何定义。
+> 我觉得这样看之后，这篇论文的贡献会更清楚：它不是在重新定义 frontier，而是在尝试回答——**是否可以不用在 test time 显式操作 dense 3D map，而直接从图像中预测传统几何意义下有用的 frontier 和 info gain。** 至于图像里更高层的语义信息是否被充分利用，我感觉这篇论文有涉及这个方向，但可能还不是它最核心、最彻底展开的部分。
+> 
+
+
 ### Useful details
 
 - Definitions / notation:
@@ -195,6 +307,17 @@ source_path: "10 Literature Notes/FrontierNet Learning Visual Cues to Explore.md
 - What is genuinely strong here?
 - What feels over-claimed or task-specific?
 - What should I borrow for my own research?
+
+### useful sentences
+
+1. 感觉摘要可以帮助我更好地理解exploration这个任务本身的意义
+2. 说了之前方法的问题：一是依赖3D map, 二是没有利用到视觉线索（RGB）
+3. 引言里面说了现有exploration方法可以分为两大类：一是frontier-based：从 map boundary 里直接找 frontier, 二是**sampling-based / NBV-like**：在地图里采样 viewpoint 或 path，再评估哪一个更好。==所以这两类方法的区别到底是什么？==
+4. 作者在引言里面把explortion的问题，通过人类的直觉类比，认为2D视觉输入可以得到explicite boundary，认为类似于3D地图中的boundary(边界)，我感觉这一点他们是把问题再次聚焦起来，从而起到理论上觉得可以替换的可行性？
+5. 在Method里面有两个设计，一是frontier使用的是distance field而不是二分法（是frontier或者不是frontier, bool) ，二是对于 info gain value预测头，==因为预测高方差的回归任务难度较高，所以作者设计的是分为K bins的多分类任务预测头。==
+6. If both the distance of the positions and the angle between the orientations of the new frontier and an existing frontier are below a threshold, the two are merged, ^syzsjk
+[[2026-04-20#^p28o39]]
+
 
 ### Next actions
 
