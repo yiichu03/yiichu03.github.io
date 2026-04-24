@@ -3,12 +3,12 @@ title: "ThermoAct: Thermal-Aware Vision-Language-Action Models  for Robotic Perc
 slug: "ThermoAct"
 date: 2026-04-18 14:37:44 +0000
 published_at: 2026-04-18 14:37:44 +0000
-updated_at: 2026-04-19 15:49:52 +0000
+updated_at: 2026-04-24 15:14:13 +0000
 source_path: "10 Literature Notes/ThermoAct.md"
 ---
 
 > Published: 2026-04-18
-> Updated: 2026-04-19 15:49 UTC
+> Updated: 2026-04-24 15:14 UTC
 
 ## Citation
 

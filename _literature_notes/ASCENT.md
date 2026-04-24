@@ -3,12 +3,12 @@ title: "Stairway to Success: An Online Floor-Aware Zero-Shot Object-Goal Navigat
 slug: "ASCENT"
 date: 2026-04-22 14:35:55 +0000
 published_at: 2026-04-22 14:35:55 +0000
-updated_at: 2026-04-22 13:51:15 +0000
+updated_at: 2026-04-23 06:33:14 +0000
 source_path: "10 Literature Notes/ASCENT.md"
 ---
 
 > Published: 2026-04-22
-> Updated: 2026-04-22 13:51 UTC
+> Updated: 2026-04-23 06:33 UTC
 
 ## Citation
 
@@ -95,12 +95,27 @@ source_path: "10 Literature Notes/ASCENT.md"
 
 - 环境动态性处理不足。作者明确说 OGN 假设静态环境，但真实部署里行人等动态障碍会影响 obstacle mapping 和导航表现。
 - 楼梯假设较强。方法主要针对普通楼梯，对螺旋楼梯或不规则楼梯可能不适用。
+- 仍依赖 perception 质量。作者用 `ASCENT-Ideal` 和 detector ablation 说明，性能上限受物体检测器影响明显。
+- “zero-shot” 不是“无任何先验”。它没有为新类别重训练，但用了 benchmark training split 的楼层先验和房间先验。这个点在 related work / claim framing 里要保持清醒。
+- 方法在视觉-几何不一致、楼梯 navmesh 损坏时会失败，论文 stress test 也承认这一点。
 
 ### AI Questions to Verify
 
 - Which claims should I check in the figures/tables?
+	- Table I：ASCENT 相对 MFNP、ApexNav 的主结果到底体现的是“多楼层能力”还是“整体规划更强”？
+	- Table III：different-floor episodes 的提升是否才是真正最有说服力的结果？
+	- Table IV / V / VI：性能提升到底来自架构设计、基础模型替换，还是 detector 改善？
+	- Table VII：LLM 调用次数大幅减少时，是否同时牺牲了某些复杂场景下的推理细度？
 - Which design choices seem most important?
+	- 每层独立 BEV + 跨层拓扑，而不是多层合并地图；
+	- 楼梯检测里的**上楼视觉检测 + 下楼深度启发**的双模态设计；
+	- 只在必要时触发 LLM 的 coarse-to-fine 机制；
+	- 物体-楼层、物体-房间的统计先验在 LLM 决策里扮演多大作用。
 - Which details are still vague after only reading the abstract/introduction?
+	- 垂直定位和楼层切换时，系统如何保证 localization 不崩；
+	- `M_ss`、`M_ec` 的具体构造和累计方式；
+	- 何时触发 inter-floor reasoning，何时直接走局部 frontier；
+	- 真实机器人里哪些模块跑在本地、哪些跑在远端，以及这对可部署性意味着什么。
 
 ## Part B — My own reading notes
 
@@ -121,6 +136,52 @@ source_path: "10 Literature Notes/ASCENT.md"
 -
 
 ### Questions, clarifications, and current understanding
+
+#### 1. 关于标题里面的zero-shot
+GPT特意提醒：这里的 “zero-shot” 并不等于“完全没有任何先验知识”，后文其实还是用了统计先验和基础模型，只是**不做针对新目标类别的任务特定重训练**。这一点后面读方法时会更清楚。
+
+#### 2. 这篇论文的balance
+在摘要里面说方法有两部分组成，一是Multi-Floor Abstraction, 二是Coarse-to-Fine Reasoning.
+Multi-Floor Abstration里面又涉及stair-aware obstacle mapping和cross-floor topology modeling，解决的是“机器人怎么知道楼层结构、楼梯在哪里、哪些地方能跨层”
+对于Coarse-to-Fine Reasoning，则是偏“决策与推理”，希望平衡Frontier ranking和LLM-driven contextual analysis，因为纯局部frontier方法太贪心，纯LLM方法太慢太贵。
+
+#### 3. 关于实验
+==我有点好奇contribution里面提到的性能提升“We demonstrate state-of-the-art (SOTA) performance for ZS-OGN benchmarks, improving SR by 7.1% and SPL by 6.8% on HM3D, and SR by 3.4% on MP3D. ”==是针对有多层楼梯的场景去和其他方法比较的吗？如果其他方法没办法应对多层的场景，要如何比较呢？那岂不是一定会有提升吗？（因为前面好像也说了多层场景占比28%呢）
+
+#### 4. GPT对于一些段落的精炼总结：
+==摘要==
+用论文摘要常见的 4 格结构记就是：
+- **Problem**：多楼层 object-goal navigation 很难
+- **Gap**：现有方法不够 online / 不够 floor-aware
+- **Method**：ASCENT = Multi-Floor Abstraction + Coarse-to-Fine Reasoning
+- **Result**：benchmark 更强，还做了真实机器人部署
+
+==引言==
+- 真实机器人需要在多楼层建筑里找目标物体。
+- 这件事难，因为不仅要识别目标，还要跨层和做垂直推理。
+- HM3D / MP3D 里多楼层任务很多，但现有 OGN 方法大多按单层设计。
+- learning-based 方法泛化成本高，ZS-OGN 方法虽然不重训练，但通常也没处理好多楼层。
+- 纯 LLM 规划太慢太贵，纯 VLM 局部匹配又太贪心。
+- 所以作者提出 ASCENT：用 **Multi-Floor Abstraction + Coarse-to-Fine Reasoning** 同时解决多楼层和高效规划问题。
+==相关工作==
+如果把 Related Work + Fig. 2 一起压缩，你可以这么记：
+**相关工作三条线**
+第一条线是 **ZS-OGN**：  
+已经有不少 zero-shot 方法，但大多默认单层。
+第二条线是 **LLM-based OGN**：  
+LLM 推理强，但太频繁调用会慢。
+第三条线是 **multi-floor navigation**：  
+有人做过多楼层，但常常依赖预建图，或者在地图表示、楼梯切换、楼层决策上还有不足。
+**作者的方法定位**
+ASCENT 就是想把这三条线接起来：
+- 保留 **zero-shot**
+- 兼顾 **multi-floor**
+- 还要让 **LLM 用得少而精**
+
+图 2 则把它总结为两个核心模块：
+
+- **Multi-Floor Abstraction**：负责楼层内/楼层间表示
+- **Coarse-to-Fine Reasoning**：负责跨楼层语义推理与决策
 
 
 
@@ -156,80 +217,3 @@ source_path: "10 Literature Notes/ASCENT.md"
 - Check code / project page:
 - Compare with:
 - Whether to publish to GitHub:
-
-## AI prompts
-
-### Prompt 1 — Quick scan
-
-```text
-I am reading the paper "{{title}}".
-My goal is to decide whether it is worth a deep read.
-
-Please give me:
-1. the paper's main problem,
-2. the core idea in plain language,
-3. the 3 most important contributions,
-4. the main evidence supporting the claim,
-5. the likely limitations,
-6. what kind of researcher should read this paper.
-
-Keep it concise and grounded in the paper. If something is uncertain, say so explicitly.
-```
-
-### Prompt 2 — Focused deep reading
-
-```text
-I am reading the paper "{{title}}" for a focused technical understanding.
-Please help me build a structured reading scaffold.
-
-Output these sections:
-- problem setting,
-- assumptions,
-- inputs and outputs,
-- method pipeline,
-- key modules and why they are needed,
-- training objective,
-- inference procedure,
-- experiment design,
-- strongest results,
-- limitations.
-
-Do not just paraphrase the abstract. Highlight what I should verify in the main paper.
-```
-
-### Prompt 3 — Robotics / embodied / code-oriented reading
-
-```text
-I am reading the paper "{{title}}" from a robotics / embodied AI perspective.
-Please focus on:
-- observation interface,
-- action representation,
-- temporal modeling,
-- training target,
-- rollout / control loop,
-- what is algorithmic novelty versus system engineering,
-- what would matter for reproduction on a real robot.
-
-For each item, explain why it matters and list the details I should look for in the paper or code.
-```
-
-### Prompt 4 — Related-work comparison
-
-```text
-Help me place the paper "{{title}}" in the literature.
-
-Compare it against the most relevant prior work in terms of:
-- problem setting,
-- method idea,
-- data assumptions,
-- evaluation setting,
-- strengths,
-- weaknesses.
-
-Then tell me what the true novelty is, and what might just be better engineering or benchmarking.
-```
-
-## Publication
-
-- Set `publish: github` to publish this note on `github.io`
-- Or add `github` to `tags`
