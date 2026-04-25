@@ -1,6 +1,6 @@
 ---
 title: "Deep Reinforcement Learning-Based Large-Scale Robot Exploration"
-slug: "Deep-Reinforcement-Learning-Based-Large-Scale-Robot-Exploration"
+slug: "deep-reinforcement-learning-based-large-scale-robot-exploration"
 date: 2026-04-08 05:34:48 +0000
 published_at: 2026-04-08 05:34:48 +0000
 updated_at: 2026-04-08 06:04:13 +0000

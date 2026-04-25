@@ -1,6 +1,6 @@
 ---
 title: "All-day Depth Completion via Thermal-LiDAR Fusion"
-slug: "All-day-Depth-Completion-via-Thermal-LiDAR-Fusion"
+slug: "all-day-depth-completion-via-thermal-lidar-fusion"
 date: 2026-04-25 19:01:30 +0000
 published_at: 2026-04-25 19:01:30 +0000
 updated_at: 2026-04-25 19:01:11 +0000

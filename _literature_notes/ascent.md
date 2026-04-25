@@ -1,6 +1,6 @@
 ---
 title: "Stairway to Success: An Online Floor-Aware Zero-Shot Object-Goal Navigation Framework via LLM-Driven Coarse-to-Fine Exploration"
-slug: "ASCENT"
+slug: "ascent"
 date: 2026-04-22 14:35:55 +0000
 published_at: 2026-04-22 14:35:55 +0000
 updated_at: 2026-04-23 06:33:14 +0000

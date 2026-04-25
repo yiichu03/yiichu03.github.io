@@ -1,6 +1,6 @@
 ---
 title: "ThermoAct: Thermal-Aware Vision-Language-Action Models  for Robotic Perception and Decision-Making"
-slug: "ThermoAct"
+slug: "thermoact"
 date: 2026-04-18 14:37:44 +0000
 published_at: 2026-04-18 14:37:44 +0000
 updated_at: 2026-04-24 15:14:13 +0000

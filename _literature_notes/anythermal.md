@@ -1,6 +1,6 @@
 ---
 title: "AnyThermal: Towards Learning Universal Representations for Thermal Perception"
-slug: "AnyThermal"
+slug: "anythermal"
 date: 2026-04-24 15:19:15 +0000
 published_at: 2026-04-24 15:19:15 +0000
 updated_at: 2026-04-24 15:18:56 +0000

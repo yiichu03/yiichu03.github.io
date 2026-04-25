@@ -64,7 +64,7 @@ def slugify(value: str) -> str:
     value = re.sub(r"\s+", "-", value, flags=re.UNICODE)
     value = re.sub(r"[^\w\-]+", "", value, flags=re.UNICODE)
     value = re.sub(r"-+", "-", value, flags=re.UNICODE).strip("-")
-    return value or "note"
+    return (value or "note").lower()
 
 
 def escape_yaml(value: str) -> str:

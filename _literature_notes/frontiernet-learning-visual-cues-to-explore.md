@@ -1,6 +1,6 @@
 ---
 title: "FrontierNet: Learning Visual Cues to Explore"
-slug: "FrontierNet-Learning-Visual-Cues-to-Explore"
+slug: "frontiernet-learning-visual-cues-to-explore"
 date: 2026-04-09 14:40:42 +0000
 published_at: 2026-04-09 14:40:42 +0000
 updated_at: 2026-04-20 12:04:08 +0000
